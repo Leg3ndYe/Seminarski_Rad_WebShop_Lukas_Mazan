@@ -23,6 +23,7 @@ namespace Motorcycle_WebShop.Models
 
         [Required(ErrorMessage = "Price is required")]
         [Column(TypeName = "decimal(9,2)")]
+        [DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
         [ForeignKey("ProductId")]
