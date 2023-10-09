@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Motorcycle_WebShop.Data;
 using Motorcycle_WebShop.Models;
+using Motorcycle_WebShop.Data;
 
 namespace Motorcycle_WebShop.Controllers
 {
@@ -24,9 +24,17 @@ namespace Motorcycle_WebShop.Controllers
         // GET: AdminProduct
         public async Task<IActionResult> Index()
         {
-              return _context.Product != null ? 
-                          View(await _context.Product.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+            if(_context.Product == null)
+                return Problem("Entity set 'ApplicationDbContext.Product'  is null.");
+            var products = await _context.Product.ToListAsync();
+            foreach (var product in products)
+            {
+                product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == product.Id).ToList();
+                product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
+            }
+            ViewBag.Categories = _context.Category.ToList();
+            return View(products);
+                          
         }
 
         // GET: AdminProduct/Details/5
@@ -43,7 +51,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
-
+            product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == product.Id).ToList();
             return View(product);
         }
 
@@ -58,7 +66,7 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,IsActive,Title,Description,Quantity,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,Active,Quantity,Price")] Product product)
         {
             ModelState.Remove("ProductCategories");
             ModelState.Remove("OrderItems");
@@ -85,6 +93,9 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
+            product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == product.Id).ToList();
+            product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
+            ViewBag.Categories = _context.Category.ToList();
             return View(product);
         }
 
@@ -93,7 +104,7 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,IsActive,Title,Description,Quantity,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Active,Quantity,Price")] Product product)
         {
             if (id != product.Id)
             {
@@ -127,6 +138,29 @@ namespace Motorcycle_WebShop.Controllers
             return View(product);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> EditCategory(int id)
+        {
+            List<Category> categories= _context.Category.ToList();
+            foreach(var cat in categories)
+            {
+                var checkbox = Request.Form[cat.Title];
+                var pc = _context.ProductCategory.FirstOrDefault(x => x.CategoryId == cat.Id && x.ProductId == id);
+
+                if (checkbox.Contains("true"))
+                {
+                    if(pc == null)
+                        _context.ProductCategory.Add(new ProductCategory() { CategoryId=cat.Id,ProductId=id});
+                }
+                else
+                {
+                    if (pc != null) _context.ProductCategory.Remove(pc);
+                }
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Edit), new {id});
+        }
+
         // GET: AdminProduct/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
@@ -157,6 +191,7 @@ namespace Motorcycle_WebShop.Controllers
             var product = await _context.Product.FindAsync(id);
             if (product != null)
             {
+                _context.ProductImage.RemoveRange(_context.ProductImage.Where(pc => pc.ProductId  == product.Id));
                 _context.Product.Remove(product);
             }
             

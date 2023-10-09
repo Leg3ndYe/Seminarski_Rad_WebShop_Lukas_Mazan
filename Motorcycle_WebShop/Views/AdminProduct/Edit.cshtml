@@ -9,6 +9,25 @@
 <h4>Product</h4>
 <hr />
 <div class="row">
+    @if (Model.ProductImages != null)
+    {
+        foreach (var image in Model.ProductImages)
+        {
+            <div class="col-sm-3">
+                <img src="@image.FilePath" alt="@Model.Title" height="75">
+            </div>
+        }
+    }
+    else
+    {
+        <div class="col-sm-3">
+            <img src="~/images/noimage.jpg" alt="@Model.Title" height="75">
+        </div>
+    }
+</div>
+<a asp-controller="AdminProductImage" asp-action="Index" asp-route-id="@Model.Id">Edit Images</a>
+<hr />
+<div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -25,7 +44,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -40,6 +59,22 @@
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="EditCategory">
+            <input type="hidden" asp-for="Id"/>
+            <label>Categories</label>
+            @foreach(Category cat in ViewBag.Categories)
+            {
+                <div class="form-group">
+                    @Html.CheckBox(cat.Title, Model.ProductCategories.Count(y=>y.CategoryId==cat.Id)>0)
+                    @Html.Label(cat.Title)
+                </div>
+            }
+            <div class="form-group">
+                <input type="submit" value="Save categories" class="btn btn-primary" />
             </div>
         </form>
     </div>

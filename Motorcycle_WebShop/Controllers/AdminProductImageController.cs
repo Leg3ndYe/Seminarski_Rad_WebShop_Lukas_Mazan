@@ -22,10 +22,12 @@ namespace Motorcycle_WebShop.Controllers
         }
 
         // GET: AdminProductImage
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int? id)
         {
+            if (id == null) return RedirectToAction("Index", "AdminProduct");
+            ViewBag.ProductId = id;
               return _context.ProductImage != null ? 
-                          View(await _context.ProductImage.ToListAsync()) :
+                          View(await _context.ProductImage.Where(x=>x.ProductId==id).ToListAsync()) :
                           Problem("Entity set 'ApplicationDbContext.ProductImage'  is null.");
         }
 
@@ -48,9 +50,11 @@ namespace Motorcycle_WebShop.Controllers
         }
 
         // GET: AdminProductImage/Create
-        public IActionResult Create()
+        public IActionResult Create(int? id)
         {
-            return View();
+            if (id == null) return RedirectToAction("Index", "AdminProduct");
+            if (_context.Product.Count(p => p.Id == id) == 0) return RedirectToAction("Index", "AdminProduct");
+            return View(new ProductImage() { ProductId = (int)id});
         }
 
         // POST: AdminProductImage/Create
@@ -60,11 +64,30 @@ namespace Motorcycle_WebShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,ProductId,IsMainImage,Title,FilePath")] ProductImage productImage)
         {
+            ModelState.Remove("ProductTitle");
+            if (HttpContext.Request.Form.Files.Count > 0) ModelState.Remove("FilePath");
             if (ModelState.IsValid)
             {
+                var imageFile = HttpContext.Request.Form.Files.FirstOrDefault();
+                var uploadPath = Path.Combine("wwwroot", "images", "products", productImage.ProductId.ToString());
+                if(!Directory.Exists(uploadPath))
+                {
+                    Directory.CreateDirectory(uploadPath);
+                }
+                if(imageFile != null)
+                {
+                    var filePath = Path.Combine(uploadPath, imageFile.FileName);
+                    using(var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await imageFile.CopyToAsync(fileStream);
+                    }
+                    filePath = filePath.Replace("wwwroot\\", "/").Replace("\\", "/");
+                    productImage.FilePath = filePath;
+                }
+                productImage.Id = 0;
                 _context.Add(productImage);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), productImage.ProductId);
             }
             return View(productImage);
         }
@@ -72,6 +95,7 @@ namespace Motorcycle_WebShop.Controllers
         // GET: AdminProductImage/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
+            return RedirectToAction("Index", "AdminProduct");
             if (id == null || _context.ProductImage == null)
             {
                 return NotFound();
@@ -92,6 +116,7 @@ namespace Motorcycle_WebShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,ProductId,IsMainImage,Title,FilePath")] ProductImage productImage)
         {
+            return RedirectToAction("Index", "AdminProduct");
             if (id != productImage.Id)
             {
                 return NotFound();
@@ -150,11 +175,13 @@ namespace Motorcycle_WebShop.Controllers
             var productImage = await _context.ProductImage.FindAsync(id);
             if (productImage != null)
             {
+                var filePath = "wwwroot" + productImage.FilePath.Replace("/","\\");
+                System.IO.File.Delete(filePath);
                 _context.ProductImage.Remove(productImage);
             }
             
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {id=productImage.ProductId});
         }
 
         private bool ProductImageExists(int id)

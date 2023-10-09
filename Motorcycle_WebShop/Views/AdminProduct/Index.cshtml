@@ -19,7 +19,14 @@
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
+                @*@Html.DisplayNameFor(model => model.ProductImages)*@
+                Image Title  
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Categories
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -40,7 +47,32 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
+                    @{
+                        try {
+                            var image = item.ProductImages.FirstOrDefault(x => x.IsMainImage == true);
+                            if (image != null)
+                            {
+                                <img src="@image.FilePath" alt="@item.Title" width="75">
+                            }
+                            else
+                            {
+                                <img src="~/images/noimage.jpg" alt="@item.Title" width="75">
+                            }
+                        }
+                        catch {
+                             <img src="~/images/noimage.jpg" alt="@item.Title" width="75"> 
+                        }
+                    }
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @foreach(var category in item.ProductCategories)
+                {
+                        var categoryList = (ViewBag.Categories as List<Category>).FirstOrDefault(x => x.Id == category.CategoryId);
+                        <span>@categoryList.Title</span> <br />
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Quantity)
