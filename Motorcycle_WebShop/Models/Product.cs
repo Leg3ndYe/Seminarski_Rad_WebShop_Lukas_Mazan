@@ -9,7 +9,7 @@ namespace Motorcycle_WebShop.Models
         [Key]
         public int Id { get; set; }
 
-        public bool IsActive { get; set; }
+        public bool IsActive { get; set; } = true;
 
         [Required(ErrorMessage = "Title is required")]
         [StringLength(250, MinimumLength = 5)]

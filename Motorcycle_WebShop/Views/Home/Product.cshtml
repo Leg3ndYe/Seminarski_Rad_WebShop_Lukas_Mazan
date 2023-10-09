@@ -1,0 +1,74 @@
+﻿@model List<Motorcycle_WebShop.Models.Product>
+
+@{
+    ViewData["Title"] = "Product";
+}
+
+<h2>Product list</h2>
+
+<div class="row mb-5">
+    <div class="col-2">
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Filter by category
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @foreach(var item in ViewBag.Categories)
+                {
+                    <a class="dropdown-item" asp-action="Product" asp-route-categoryId ="@item.Id">@item.Title</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="col-2">
+        <a asp-action="Product" class="btn btn-warning">Clear filter</a>
+    </div>
+</div>
+<div class="row mt-3"> 
+    @foreach (var item in Model) {
+         <div class="col-sm-3"> <br>
+              <div class="card">
+                   <div class="card-body">
+                     @{
+                        try
+                        {
+                            var image = item.ProductImages.FirstOrDefault(x => x.IsMainImage == true);
+                            if (image != null)
+                            {
+                                <img class="card-img" src="@image.FilePath" alt="@item.Title">
+                            }
+                            else
+                            {
+                                <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
+                            }
+                        }
+                        catch
+                        {
+                            <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
+                        }
+                     }
+                      <h5 class="card-title">@item.Title</h5>
+                      <p class="card-text">@item.Description</p>
+                        <table class="table table-condensed table-hover">
+                            <thead>
+                                <tr>
+                                    <th> Price </th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>@item.Price €</td>
+                                    <td>
+                                        <form>
+                                            <input type="submit" class="btn btn-success btn-sm" value="Add to cart" style="float:right">
+                                        </form>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                   </div>
+              </div>
+         </div>
+    }
+</div>

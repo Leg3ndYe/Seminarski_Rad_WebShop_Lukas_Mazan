@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Motorcycle_WebShop.Data;
 using Motorcycle_WebShop.Models;
 using System.Diagnostics;
 
@@ -7,10 +8,12 @@ namespace Motorcycle_WebShop.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
         {
             _logger = logger;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -21,6 +24,25 @@ namespace Motorcycle_WebShop.Controllers
         public IActionResult Privacy()
         {
             return View();
+        }
+
+        public IActionResult Product(int? categoryId)
+        {
+            List<Product> products = _context.Product.ToList();
+
+            foreach (var product in products)
+            {
+                product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == product.Id).ToList();
+                product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
+            }
+
+            if (categoryId != null)
+            {
+                products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == categoryId)).ToList();
+            }
+
+            ViewBag.Categories = _context.Category.ToList();
+            return View(products);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
