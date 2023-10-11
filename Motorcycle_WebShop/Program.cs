@@ -39,6 +39,9 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthentication();
+
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
