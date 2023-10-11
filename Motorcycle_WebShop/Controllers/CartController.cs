@@ -21,10 +21,29 @@ namespace Motorcycle_WebShop.Controllers
             decimal total = 0;
             foreach (CartItem item in cart)
             {
+                item.Product.ProductImages=_context.ProductImage.Where(pi => pi.ProductId == item.Product.Id).ToList();
                 total += item.GetTotal();
             }
             ViewBag.CartTotal = total;
             return View(cart);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeQuantityCartItem(int productId, decimal quantity)
+        {
+            if(quantity <= 0) return RedirectToAction("RemoveFromCart", new {productId = productId});
+            List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
+
+            foreach (CartItem item in cart)
+            {
+                if (item.Product.Id == productId)
+                {
+                    item.Quantity = quantity;
+                    break;
+                }
+            }
+            HttpContext.Session.SetObjectAsJson(SessionKeyName, cart);
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -71,6 +90,12 @@ namespace Motorcycle_WebShop.Controllers
 
         public IActionResult RemoveFromCart(int productId)
         {
+            List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
+
+            cart.RemoveAll(x => x.Product.Id == productId);
+
+            HttpContext.Session.SetObjectAsJson(SessionKeyName, cart);
+
             return RedirectToAction("Index");
         }
 
