@@ -29,26 +29,28 @@
          <div class="col-sm-3"> <br>
               <div class="card">
                    <div class="card-body">
-                     @{
-                        try
-                        {
-                            var image = item.ProductImages.FirstOrDefault(x => x.IsMainImage == true);
-                            if (image != null)
+                        <a asp-action="Product" asp-route-id="@item.Id" style="color:inherit; text-decoration:none">
+                        @{
+                            try
                             {
-                                <img class="card-img" src="@image.FilePath" alt="@item.Title">
+                                var image = item.ProductImages.FirstOrDefault(x => x.IsMainImage == true);
+                                if (image != null)
+                                {
+                                    <img class="card-img" src="@image.FilePath" alt="@item.Title">
+                                }
+                                else
+                                {
+                                    <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
+                                }
                             }
-                            else
+                            catch
                             {
                                 <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
                             }
                         }
-                        catch
-                        {
-                            <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
-                        }
-                     }
                       <h5 class="card-title">@item.Title</h5>
                       <p class="card-text">@item.Description</p>
+                        </a>
                         <table class="table table-condensed table-hover">
                             <thead>
                                 <tr>

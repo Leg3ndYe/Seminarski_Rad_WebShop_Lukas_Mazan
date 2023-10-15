@@ -1,0 +1,74 @@
+﻿@model Motorcycle_WebShop.Models.Product
+
+@{
+    ViewData["Title"] = "ProductDetails";
+}
+<link rel="stylesheet" type="text/css" href="~/css/carousel.css">
+
+<h1>@Html.DisplayFor(model => model.Title)</h1>
+    <div>
+        <hr />
+        <div id="imagecarousel" class="carousel slide" data-bs-interval="false" data-bs-touch="false">
+            <div class="carousel-inner">
+            @{
+                var i = 0;
+                foreach(var item in Model.ProductImages)
+                {
+                    if(i == 0)
+                    { 
+                        <div class="carousel-item active">
+                            <div class="d-flex justify-content-center">
+                                <img src="@item.FilePath" alt="@Model.Title" class="d-block" width="400">
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="carousel-item">
+                            <div class="d-flex justify-content-center">
+                                <img src="@item.FilePath" alt="@Model.Title" class="d-block" width="400">
+                            </div>
+                        </div>
+                    }
+                    i++;
+                }
+            }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#imagecarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#imagecarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Description)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Price)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Price)
+            </dd>
+            <dt class="col-sm-2">
+
+            </dt>
+            <dd class="col-sm-10">
+                <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="submit" class="btn btn-success btn-sm" value="Add to cart" style="float:right; width:300px; height:50px">
+                </form>
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Product" asp-route-id="">Back to Products</a>
+    </div>
+    
