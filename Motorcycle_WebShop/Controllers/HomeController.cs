@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motorcycle_WebShop.Data;
 using Motorcycle_WebShop.Extensions;
@@ -94,9 +95,58 @@ namespace Motorcycle_WebShop.Controllers
                 item.Product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == item.Product.Id).ToList();
             }
 
-            ViewBag.Error = errors;
+            ViewBag.Errors = errors;
 
             return View(cart);
+        }
+
+        public IActionResult CreateOrder(Order order, bool shippingsameaspersonal)
+        {
+            List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
+            if(cart == null)
+            {
+                return RedirectToAction("Index");
+            }
+            if(cart.Count == 0)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var errors = new List<string>();
+
+            for (int i = 0; i < cart.Count; i++)
+            {
+                var product = _context.Product.Find(cart[i].Product.Id);
+                if (product == null)
+                {
+                    cart.RemoveAt(i);
+                    i--;
+                    errors.Add("Product not found and was removed from cart.");
+                    continue;
+                }
+                if (product.Quantity < cart[i].Quantity)
+                {
+                    cart[i].Quantity = product.Quantity;
+                    errors.Add("Product quantity was reduced to available quantity!");
+                }
+                if (!product.IsActive)
+                {
+                    cart.RemoveAt(i);
+                    i--;
+                    errors.Add("Product is not active and was removed from cart!");
+                    continue;
+                }
+
+            }
+
+            HttpContext.Session.SetObjectAsJson(SessionKeyName, cart);
+
+            if(errors.Count > 0)
+            {
+                return RedirectToAction("Order", new {errors});
+            }
+
+            return RedirectToAction("Order", new {errors});
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
