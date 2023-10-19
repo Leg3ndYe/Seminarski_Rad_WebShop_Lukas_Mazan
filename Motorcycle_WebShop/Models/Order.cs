@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Authorization;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Reflection.Metadata.Ecma335;
 
@@ -40,7 +42,7 @@ namespace Motorcycle_WebShop.Models
 
         [Required(ErrorMessage = "Adress is required")]
         [StringLength(200)]
-        public string BillingAdress { get; set; }
+        public string BillingAddress { get; set; }
 
         [Required(ErrorMessage = "City is required")]
         [StringLength(100)]
@@ -78,7 +80,7 @@ namespace Motorcycle_WebShop.Models
 
         [Required(ErrorMessage = "Adress is required")]
         [StringLength(200)]
-        public string ShippingAdress { get; set; }
+        public string ShippingAddress { get; set; }
 
         [Required(ErrorMessage = "City is required")]
         [StringLength(100)]
@@ -95,7 +97,8 @@ namespace Motorcycle_WebShop.Models
 
         #endregion
 
-        public string Message { get; set; }
+        [NotNull]
+        public string? Message { get; set; }
 
         public string UserId { get; set; }
 

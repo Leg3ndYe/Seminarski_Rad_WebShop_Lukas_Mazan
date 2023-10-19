@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Motorcycle_WebShop.Data;
@@ -12,16 +14,18 @@ namespace Motorcycle_WebShop.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
         public const string SessionKeyName = "_cart";
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _logger = logger;
             _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(string? message)
         {
-            return View();
+            return View("Index", message);
         }
 
         public IActionResult Privacy()
@@ -56,6 +60,7 @@ namespace Motorcycle_WebShop.Controllers
             return View(products);
         }
 
+        [Authorize]
         public IActionResult Order(List<string> errors)
         {
             List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
@@ -77,14 +82,21 @@ namespace Motorcycle_WebShop.Controllers
                     cart[i].Quantity = product.Quantity;
                     errors.Add("Product quantity was reduced to available quantity!");
                 }
-                if(!product.IsActive)
+                if (product.Quantity == 0)
                 {
                     cart.RemoveAt(i);
                     i--;
-                    errors.Add("Product is not active and was removed from cart!");
+                    errors.Add("Product " + product.Title + " and was removed from cart!");
                     continue;
                 }
-                
+                if (!product.IsActive)
+                {
+                    cart.RemoveAt(i);
+                    i--;
+                    errors.Add("Product " + product.Title + "is not active and was removed from the cart!");
+                    continue;
+                }
+
             }
 
             HttpContext.Session.SetObjectAsJson(SessionKeyName, cart);
@@ -100,16 +112,18 @@ namespace Motorcycle_WebShop.Controllers
             return View(cart);
         }
 
-        public IActionResult CreateOrder(Order order, bool shippingsameaspersonal)
+        [Authorize]
+        [HttpPost]
+        public IActionResult CreateOrder(Order order, string shippingsameaspersonal)
         {
             List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
             if(cart == null)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new {Message="Cart is empty! Order can't be completed!"});
             }
             if(cart.Count == 0)
             {
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", new { Message = "Cart is empty! Order can't be completed!" });
             }
 
             var errors = new List<string>();
@@ -129,11 +143,18 @@ namespace Motorcycle_WebShop.Controllers
                     cart[i].Quantity = product.Quantity;
                     errors.Add("Product quantity was reduced to available quantity!");
                 }
+                if (product.Quantity == 0)
+                {
+                    cart.RemoveAt(i);
+                    i--;
+                    errors.Add("Product " + product.Title + " and was removed from cart!");
+                    continue;
+                }
                 if (!product.IsActive)
                 {
                     cart.RemoveAt(i);
                     i--;
-                    errors.Add("Product is not active and was removed from cart!");
+                    errors.Add("Product " + product.Title + "is not active and was removed from the cart!");
                     continue;
                 }
 
@@ -143,10 +164,63 @@ namespace Motorcycle_WebShop.Controllers
 
             if(errors.Count > 0)
             {
-                return RedirectToAction("Order", new {errors});
+                return RedirectToAction("Order", new {errors = errors});
             }
 
-            return RedirectToAction("Order", new {errors});
+            if (shippingsameaspersonal == "on")
+            {
+                order.ShippingFirstName = order.BillingFirstName;
+                order.ShippingLastName = order.BillingLastName;
+                order.ShippingEmail = order.BillingEmail;
+                order.ShippingPhone = order.BillingPhone;
+                order.ShippingAddress = order.BillingAddress;
+                order.ShippingCity = order.BillingCity;
+                order.ShippingPostalCode = order.BillingPostalCode;
+                order.ShippingCountry = order.BillingCountry;
+            }
+            order.DateCreated = DateTime.Now;
+            order.Total = cart.Sum(x => x.Product.Price * x.Quantity);
+            order.UserId = _userManager.GetUserId(User);
+
+            ModelState.Remove("Id");
+            ModelState.Remove("Orders");
+            ModelState.Remove("shippingsameaspersonal");
+            if (ModelState.IsValid) 
+            {
+                _context.Order.Add(order);
+                _context.SaveChanges();
+
+                int order_id = order.Id;
+                foreach(var item in cart)
+                {
+                    OrderItem order_item = new OrderItem
+                    {
+                        OrderId = order_id,
+                        ProductId = item.Product.Id,
+                        Quantity = item.Quantity,
+                        Price = item.Product.Price
+                    };
+
+                    _context.OrderItem.Add(order_item);
+                    _context.Product.Find(item.Product.Id).Quantity -= item.Quantity;
+                    _context.SaveChanges();
+                }
+                HttpContext.Session.Remove(SessionKeyName);
+
+                return RedirectToAction("Index", new { message = "Thank you for your purchase! :P" });
+            }
+            else
+            {
+                errors.Add("Order is not valid!");
+                foreach(var modelState in ModelState.Values)
+                {
+                    foreach (var modelError in modelState.Errors)
+                    {
+                        errors.Add(modelError.ErrorMessage);
+                    }
+                }
+            }
+            return RedirectToAction("Order", new {errors = errors});
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

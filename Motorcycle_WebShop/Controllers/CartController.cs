@@ -29,7 +29,7 @@ namespace Motorcycle_WebShop.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeQuantityCartItem(int productId, decimal quantity)
+        public IActionResult ChangeCartItemQuantity(int productId, decimal quantity)
         {
             if(quantity <= 0) return RedirectToAction("RemoveFromCart", new {productId = productId});
             List<CartItem> cart = HttpContext.Session.GetObjectFromJson<List<CartItem>>(SessionKeyName);
