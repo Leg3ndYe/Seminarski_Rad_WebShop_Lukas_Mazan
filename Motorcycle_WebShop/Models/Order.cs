@@ -15,7 +15,7 @@ namespace Motorcycle_WebShop.Models
         public int Id { get; set; }
 
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:dd-MM-yyyy}")]
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DateCreated { get; set; } = DateTime.Now;
 
         [Required(ErrorMessage = "Total price is required")]
@@ -103,6 +103,6 @@ namespace Motorcycle_WebShop.Models
         public string UserId { get; set; }
 
         [ForeignKey("OrderId")]
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }
