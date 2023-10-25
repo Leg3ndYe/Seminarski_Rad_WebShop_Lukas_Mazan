@@ -79,6 +79,7 @@ namespace Motorcycle_WebShop.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            
             return View(orderItem);
         }
 
@@ -95,6 +96,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
+            orderItem.ProductTitle = GetProductTitle(orderItem);
             return View(orderItem);
         }
 
@@ -109,12 +111,47 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
+            if (orderItem.Quantity <= 0)
+            {
+                ModelState.AddModelError("Quantity", "Quantity must be greater than 0");
+            }
+            if (orderItem.Price <= 0)
+            {
+                ModelState.AddModelError("Price", "Price must be greater than 0");
+            }
+            ModelState.Remove("ProductTitle");
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(orderItem);
+                    var old_orederItem = await _context.OrderItem.FindAsync(id);
+                    var quantity_diff = orderItem.Quantity - old_orederItem.Quantity;
+                    var price_diff = orderItem.Price - old_orederItem.Price;
+                    if (quantity_diff < 0)
+                    {
+                        _context.Product.Find(orderItem.ProductId).Quantity += Math.Abs(quantity_diff);
+                    }
+                    if (quantity_diff > 0)
+                    {
+                        var available_quantity = _context.Product.Find(orderItem.ProductId).Quantity;
+                        if (available_quantity < quantity_diff)
+                        {
+                            ModelState.AddModelError("Quantity", $"Only {available_quantity} items are available, you tried to add {quantity_diff}");
+                            orderItem.ProductTitle = GetProductTitle(orderItem);
+                            return View(orderItem);
+                        }
+                        _context.Product.Find(orderItem.ProductId).Quantity -= quantity_diff;
+                    }
+                    if (price_diff != 0 || quantity_diff != 0)
+                    {
+                        var old_price = old_orederItem.Price * old_orederItem.Quantity;
+                        var new_price = orderItem.Price * orderItem.Quantity;
+                        _context.Order.Find(orderItem.OrderId).Total += new_price - old_price;
+                    }
+                    old_orederItem.Quantity = orderItem.Quantity;
+                    old_orederItem.Price = orderItem.Price;
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -128,8 +165,9 @@ namespace Motorcycle_WebShop.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index), new {id = orderItem.OrderId});
             }
+            orderItem.ProductTitle = GetProductTitle(orderItem);
             return View(orderItem);
         }
 
@@ -147,7 +185,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
-
+            orderItem.ProductTitle = GetProductTitle(orderItem);
             return View(orderItem);
         }
 
@@ -161,13 +199,16 @@ namespace Motorcycle_WebShop.Controllers
                 return Problem("Entity set 'ApplicationDbContext.OrderItem'  is null.");
             }
             var orderItem = await _context.OrderItem.FindAsync(id);
+            int? orderId = orderItem.OrderId;
             if (orderItem != null)
             {
+                _context.Order.Find(orderItem.OrderId).Total -= orderItem.Price * orderItem.Quantity;
+                _context.Product.Find(orderItem.ProductId).Quantity += orderItem.Quantity;
                 _context.OrderItem.Remove(orderItem);
             }
-            
+
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Index), new {id = orderId});
         }
 
         private bool OrderItemExists(int id)

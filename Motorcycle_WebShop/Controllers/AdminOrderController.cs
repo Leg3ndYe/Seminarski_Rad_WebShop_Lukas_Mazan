@@ -136,7 +136,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
-
+            order.OrderItems = GetItemsForOrder((int)id);
             return View(order);
         }
 
@@ -152,9 +152,14 @@ namespace Motorcycle_WebShop.Controllers
             var order = await _context.Order.FindAsync(id);
             if (order != null)
             {
+                foreach (var order_item in _context.OrderItem.Where(oi => oi.OrderId == order.Id))
+                {
+                    _context.Product.Find(order_item.ProductId).Quantity += order_item.Quantity;
+                    _context.OrderItem.Remove(order_item);
+                }
                 _context.Order.Remove(order);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

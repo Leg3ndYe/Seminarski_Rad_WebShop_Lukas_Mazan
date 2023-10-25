@@ -183,7 +183,7 @@ namespace Motorcycle_WebShop.Controllers
             order.UserId = _userManager.GetUserId(User);
 
             ModelState.Remove("Id");
-            ModelState.Remove("Orders");
+            ModelState.Remove("OrderItems");
             ModelState.Remove("shippingsameaspersonal");
             if (ModelState.IsValid) 
             {
