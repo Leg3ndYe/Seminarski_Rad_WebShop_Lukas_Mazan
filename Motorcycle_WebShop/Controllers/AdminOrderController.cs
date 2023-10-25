@@ -21,7 +21,26 @@ namespace Motorcycle_WebShop.Controllers
         {
             _context = context;
         }
-
+        private List<OrderItem> GetItemsForOrder(int orderId)
+        {
+            return (
+                from order_item in _context.OrderItem
+                where order_item.OrderId == orderId
+                select new OrderItem
+                {
+                    Id = order_item.Id,
+                    OrderId = order_item.OrderId,
+                    ProductId = order_item.ProductId,
+                    Quantity = order_item.Quantity,
+                    Price = order_item.Price,
+                    ProductTitle = (
+                                    from product in _context.Product
+                                    where product.Id == order_item.ProductId
+                                    select product.Title
+                                    ).FirstOrDefault()
+                }
+                ).ToList();
+        }
         // GET: AdminOrder
         public async Task<IActionResult> Index()
         {
@@ -45,21 +64,7 @@ namespace Motorcycle_WebShop.Controllers
                 return NotFound();
             }
 
-            order.OrderItems = (
-                from order_item in _context.OrderItem
-                where order_item.OrderId == order.Id
-                select new OrderItem
-                {
-                    Id = order_item.Id,
-                    OrderId = order_item.OrderId,
-                    ProductId = order_item.ProductId,
-                    Quantity = order_item.Quantity,
-                    Price = order_item.Price,
-                    ProductTitle = (
-                                  from product in _context.Product
-                                  where product.Id == order_item.ProductId
-                                  select product.Title).FirstOrDefault()
-                }).ToList();
+            order.OrderItems = GetItemsForOrder(order.Id);
 
             return View(order);
         }
@@ -77,6 +82,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
+            order.OrderItems = GetItemsForOrder(order.Id);
             return View(order);
         }
 
@@ -91,7 +97,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
-
+            ModelState.Remove("OrderItems");
             if (ModelState.IsValid)
             {
                 try
@@ -112,6 +118,7 @@ namespace Motorcycle_WebShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            order.OrderItems = GetItemsForOrder(order.Id);
             return View(order);
         }
 
