@@ -144,7 +144,7 @@ namespace Motorcycle_WebShop.Controllers
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
-        {
+        {   
             if (_context.Order == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.Order'  is null.");
