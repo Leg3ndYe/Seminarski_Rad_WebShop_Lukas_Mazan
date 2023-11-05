@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Motorcycle_WebShop.Data;
 using Motorcycle_WebShop.Models;
+using Motorcycle_WebShop.Controllers;
+using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Motorcycle_WebShop.Controllers
 {
@@ -17,11 +18,13 @@ namespace Motorcycle_WebShop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        public AdminUserManagementController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        private readonly IConfiguration _configuration;
+        
+        public AdminUserManagementController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
         {
             _context = context;
             _userManager = userManager;
+            _configuration = configuration;
         }
 
         // GET: AdminUserManagement
@@ -31,10 +34,7 @@ namespace Motorcycle_WebShop.Controllers
             List<ApplicationUser> appUsers = _context.Users.ToList();
             
             
-            return View(appUsers);
-              //return _context.UserManagement != null ? 
-              //            View(await _context.UserManagement.ToListAsync()) :
-              //            Problem("Entity set 'ApplicationDbContext.UserManagement'  is null.");
+            return View(appUsers);   
         }
 
         // GET: AdminUserManagement/Details/5
@@ -68,6 +68,23 @@ namespace Motorcycle_WebShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(ApplicationUser applicationUser)
         {
+            applicationUser.NormalizedEmail = applicationUser.Email.ToUpper();
+            applicationUser.NormalizedUserName = applicationUser.Email.ToUpper();
+            applicationUser.UserName = applicationUser.Email;
+
+            var hasher = new PasswordHasher<ApplicationUser>();
+            var passwordhash = hasher.HashPassword(null, applicationUser.Password);
+
+            applicationUser.PasswordHash = passwordhash;
+            applicationUser.ConfirmationToken = Guid.NewGuid().ToString();
+
+            if (applicationUser.SendConfirmationEmail == true)
+            {
+                string confirmationLink = Url.Action("ConfirmEmail", "Home", new { token = applicationUser.ConfirmationToken }, Request.Scheme);
+                ConfirmationEmailSender confesender = new ConfirmationEmailSender(_configuration);
+                confesender.SendConfirmationEmail(applicationUser.Email, confirmationLink);
+            }
+
             ModelState.Remove("Orders");
             if (ModelState.IsValid)
             {
@@ -170,5 +187,8 @@ namespace Motorcycle_WebShop.Controllers
         {
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+        
+       
     }
 }

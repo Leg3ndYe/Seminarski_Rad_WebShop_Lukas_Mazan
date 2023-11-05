@@ -15,12 +15,14 @@ namespace Motorcycle_WebShop.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         public const string SessionKeyName = "_cart";
-        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public HomeController(ILogger<HomeController> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _logger = logger;
             _context = context;
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index(string? message)
@@ -221,6 +223,22 @@ namespace Motorcycle_WebShop.Controllers
                 }
             }
             return RedirectToAction("Order", new {errors = errors});
+        }
+        public IActionResult ConfirmEmail(string token)
+        {
+            var user = _context.Users.SingleOrDefault(u => u.ConfirmationToken == token);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            user.EmailConfirmed = true;
+            _context.SaveChangesAsync();
+
+            _signInManager.SignInAsync(user, isPersistent: false);
+
+            return View("ConfirmEmail", "Home");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

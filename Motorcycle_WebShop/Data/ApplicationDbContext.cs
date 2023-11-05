@@ -45,13 +45,15 @@ namespace Motorcycle_WebShop.Data
         [NotMapped]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match. Please check your spelling.")]
-        public string? PasswordConfimation { get; set; }
+        public string? PasswordConfirmation { get; set; }
 
         [NotMapped]
         public bool IsActive { get; set; }
 
         [NotMapped]
-        public bool SendConfirmationEmail { get; set; } 
+        public bool SendConfirmationEmail { get; set; }
+
+        public string? ConfirmationToken { get; set; } 
 
         [ForeignKey("UserId")]
         public virtual ICollection<Order> Orders { get; set; }
