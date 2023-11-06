@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Motorcycle_WebShop.Data;
 
@@ -30,13 +31,15 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly ApplicationDbContext _context;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -44,6 +47,7 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _context = context;
         }
 
         /// <summary>
@@ -107,7 +111,7 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(IdentityUserRole<string> userRole, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -121,6 +125,26 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
 
                 if (result.Succeeded)
                 {
+                    var registeredUser = _context.Users.FirstOrDefault(x => x.Email == Input.Email);       
+                    if (registeredUser.LastLoginAt == null)
+                    {
+                        registeredUser.LastLoginAt = new DateTime(0001, 01, 01);
+                    }
+                    if (registeredUser.LastKnownIpAddress == null)
+                    {
+                        registeredUser.LastKnownIpAddress = "Has not logged in yet.";
+                    }
+                    registeredUser.Role = "User";
+                    userRole = new IdentityUserRole<string>
+                    {
+                        UserId = registeredUser.Id,
+                        RoleId = "94a721f8-f477-40f7-aec2-057742da1c26"
+                    };
+
+                    _context.Users.Update(registeredUser);
+                    _context.UserRoles.Add(userRole);
+                    await _context.SaveChangesAsync();
+
                     _logger.LogInformation("User created a new account with password.");
 
                     var userId = await _userManager.GetUserIdAsync(user);

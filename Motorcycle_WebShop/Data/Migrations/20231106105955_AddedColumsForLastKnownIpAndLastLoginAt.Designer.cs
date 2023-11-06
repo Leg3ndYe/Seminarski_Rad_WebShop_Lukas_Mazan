@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Motorcycle_WebShop.Data;
 
@@ -11,9 +12,11 @@ using Motorcycle_WebShop.Data;
 namespace Motorcycle_WebShop.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231106105955_AddedColumsForLastKnownIpAndLastLoginAt")]
+    partial class AddedColumsForLastKnownIpAndLastLoginAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,12 +75,6 @@ namespace Motorcycle_WebShop.Data.Migrations
                             Id = "2cd04bd9-83ff-49a3-a1b7-e97a5e9896d9",
                             Name = "Secretary",
                             NormalizedName = "SECRETARY"
-                        },
-                        new
-                        {
-                            Id = "94a721f8-f477-40f7-aec2-057742da1c26",
-                            Name = "User",
-                            NormalizedName = "USER"
                         });
                 });
 
@@ -228,9 +225,6 @@ namespace Motorcycle_WebShop.Data.Migrations
                     b.Property<string>("FirstName")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
-
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("bit");
 
                     b.Property<string>("LastKnownIpAddress")
                         .HasColumnType("nvarchar(max)");

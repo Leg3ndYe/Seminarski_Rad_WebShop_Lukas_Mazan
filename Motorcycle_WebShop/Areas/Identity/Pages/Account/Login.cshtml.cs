@@ -15,6 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using Motorcycle_WebShop.Data;
+using Microsoft.AspNetCore.Http.Features;
+using System.Net;
 
 namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
 {
@@ -22,11 +24,15 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger, ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _context = context;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -102,7 +108,7 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
             ReturnUrl = returnUrl;
         }
 
-        public async Task<IActionResult> OnPostAsync(string returnUrl = null)
+        public async Task<IActionResult> OnPostAsync(string? id, string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
 
@@ -113,8 +119,16 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+               
                 if (result.Succeeded)
                 {
+                    var user = _context.Users.FirstOrDefault(x => x.Email == Input.Email);
+                    user.LastLoginAt = DateTime.Now;
+                    user.LastKnownIpAddress = Response.HttpContext.Connection.RemoteIpAddress.ToString();
+
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

@@ -47,6 +47,8 @@ namespace Motorcycle_WebShop.Controllers
                 return NotFound();
             }
 
+
+
             var users = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (users == null)
@@ -72,10 +74,6 @@ namespace Motorcycle_WebShop.Controllers
         public async Task<IActionResult> Create(ApplicationUser applicationUser, IdentityUserRole<string> userRole)
         {
             var role = _context.Roles.FirstOrDefault(x => x.Name == applicationUser.Role);
-            if (role == null)
-            {
-                return NotFound();
-            }
             userRole = new IdentityUserRole<string>
             {
                 UserId = applicationUser.Id,
@@ -91,6 +89,16 @@ namespace Motorcycle_WebShop.Controllers
 
             applicationUser.PasswordHash = passwordhash;
             applicationUser.ConfirmationToken = Guid.NewGuid().ToString();
+
+            if(applicationUser.LastLoginAt == null)
+            {
+                applicationUser.LastLoginAt = new DateTime(0001, 01, 01);
+            }
+
+            if(applicationUser.LastKnownIpAddress == null)
+            {
+                applicationUser.LastKnownIpAddress = "Has not logged in yet.";
+            }
 
             if (applicationUser.SendConfirmationEmail == true)
             {

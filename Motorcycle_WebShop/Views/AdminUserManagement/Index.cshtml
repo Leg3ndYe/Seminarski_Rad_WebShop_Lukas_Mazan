@@ -14,7 +14,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th class="col-sm-1">
+            <th class="col-sm-2">
                 Role
             </th>
             <th class="col-sm-1">
@@ -29,12 +29,8 @@
             <th class="col-sm-1">
                 2FA
             </th>
-            <th class="col-sm-1">
-                +Roles
-            </th>
-            <th class="col-sm-2">
-                Additional Permissions
-            </th>
+            <th></th>
+            <th></th>
             <th class="col-sm-2">
                 Actions
             </th>
@@ -92,12 +88,8 @@
                     </div>
                 }
             </td>
-            <td>
-                @*Roles*@
-            </td>
-            <td>
-                @*Additional Permissions*@
-            </td>
+            <td></td>
+            <td></td>
             <td>
                 <a asp-action="Details" asp-route-id="@item.Id">View</a> |
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -46,14 +46,17 @@ namespace Motorcycle_WebShop.Data
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match. Please check your spelling.")]
         public string? PasswordConfirmation { get; set; }
-
-        [NotMapped]
         public bool IsActive { get; set; }
 
         [NotMapped]
         public bool SendConfirmationEmail { get; set; }
 
-        public string? ConfirmationToken { get; set; } 
+        public string? ConfirmationToken { get; set; }
+
+        [DataType(DataType.DateTime)]
+        public DateTime? LastLoginAt { get; set; }
+
+        public string? LastKnownIpAddress { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ICollection<Order> Orders { get; set; }
@@ -98,6 +101,12 @@ namespace Motorcycle_WebShop.Data
                 Id = "2cd04bd9-83ff-49a3-a1b7-e97a5e9896d9",
                 Name = "Secretary",
                 NormalizedName = "SECRETARY"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "94a721f8-f477-40f7-aec2-057742da1c26",
+                Name = "User",
+                NormalizedName = "USER"
             });
 
             base.OnModelCreating(builder);

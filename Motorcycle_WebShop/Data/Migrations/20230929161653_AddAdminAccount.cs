@@ -65,7 +65,7 @@ namespace Motorcycle_WebShop.Data.Migrations
             migrationBuilder.Sql(sb.ToString());
 
             migrationBuilder.Sql($"INSERT INTO AspNetRoles (Id, Name, NormalizedName) " +
-                                $"VALUES ('{ADMIN_ROLE_GUID}', 'admin', 'ADMIN')");
+                                $"VALUES ('{ADMIN_ROLE_GUID}', 'Admin', 'ADMIN')");
 
             migrationBuilder.Sql($"INSERT INTO AspNetUserRoles (UserId, RoleId)" +
                                 $"VALUES ('{ADMIN_USER_GUID}', '{ADMIN_ROLE_GUID}')");
