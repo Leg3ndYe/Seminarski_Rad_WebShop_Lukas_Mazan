@@ -1,12 +1,12 @@
-﻿@model Motorcycle_WebShop.Data.ApplicationUser
+﻿@using Microsoft.AspNetCore.Identity;
+@model Motorcycle_WebShop.Data.ApplicationUser
 
 @{
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h2>Create new user</h2>
 
-<h4>UserManagement</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,13 +14,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
+                <div class="dropdown">
+                    <button class="btn btn-light dropdown-toggle" style="width:415px" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Role</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        @foreach (var role in ViewBag.Roles)
+                        {
+                            <a class="form-control dropdown-item" href="#">@role.Name</a>
+                        }
+                    </div>
+                </div>
+                <input type="hidden" class="form-control" id="selectedItem" asp-for="Role">
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Nickname" class="control-label"></label>
-                <input asp-for="Nickname" class="form-control" />
-                <span asp-validation-for="Nickname" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
@@ -59,8 +68,22 @@
         </form>
     </div>
 </div>
-
+<p>Feu543j2*</p>
 <div>
     <a asp-action="Index">Back to List</a>
 </div>
+
+<script>
+    const dropdownButton = document.getElementById("dropdownMenuButton");
+    const selectedItemField = document.getElementById("selectedItem");
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+    dropdownItems.forEach(item => {
+      item.addEventListener("click", function() {
+        const selectedValue = this.textContent;
+        dropdownButton.textContent = selectedValue;
+            selectedItemField.value = selectedValue;
+      });
+    });
+</script>
 

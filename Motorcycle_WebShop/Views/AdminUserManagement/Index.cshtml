@@ -1,40 +1,41 @@
-﻿@using Motorcycle_WebShop.Data
+﻿@using Microsoft.AspNetCore.Identity;
+@using Motorcycle_WebShop.Data
 @model List<ApplicationUser>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>User Management</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="color:grey; float:right; text-decoration:none">+Create New User</a>
 </p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                Type
+            <th class="col-sm-1">
+                Role
             </th>
-            <th>
+            <th class="col-sm-1">
                 Name
             </th>
-            <th>
-                E-mail
+            <th class="col-sm-1">
+                E-mail -------------------->
             </th>
-            <th>
+            <th class="col-sm-1">
                 Verified
             </th>
-            <th>
+            <th class="col-sm-1">
                 2FA
             </th>
-            <th>
-                Roles
+            <th class="col-sm-1">
+                +Roles
             </th>
-            <th>
+            <th class="col-sm-2">
                 Additional Permissions
             </th>
-            <th>
+            <th class="col-sm-2">
                 Actions
             </th>
             <th></th>
@@ -42,21 +43,54 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Role)
+            <tr>
+                <td>
+                    @{
+                        var roleUser = (ViewBag.UserRoles as List<IdentityUserRole<string>>).FirstOrDefault(user => user.UserId == item.Id);
+                        if (roleUser == null)
+                        {
+                            <p>User</p>
+                        }
+                        else
+                        {
+                            var roleName = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
+                            <p>@roleName.Name</p>
+                        } 
+                    }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Nickname)
+                    @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EmailConfirmed)
+                @if (!item.EmailConfirmed)
+                {
+                    <div class="text-center rounded-2 w-50" style="background-color:red; text-decoration:none">
+                        <label style="color:white" class="fw-bold">No</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center rounded-2 w-50" style="background-color:lightgreen; text-decoration:none">
+                        <label style="color:white" class="fw-bold">Yes</label>
+                    </div>
+                }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TwoFactorEnabled)
+                @if(!item.TwoFactorEnabled)
+                {
+                        <div class="text-center rounded-2 w-50" style="background-color:red; text-decoration:none">
+                        <label style="color:white" class="fw-bold">No</label>
+                    </div>
+                }
+                else
+                {
+                        <div class="text-center rounded-2 w-50" style="background-color:lightgreen; text-decoration:none">
+                        <label style="color:white" class="fw-bold">Yes</label>
+                    </div>
+                }
             </td>
             <td>
                 @*Roles*@
@@ -65,10 +99,11 @@
                 @*Additional Permissions*@
             </td>
             <td>
+                <a asp-action="Details" asp-route-id="@item.Id">View</a> |
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
                 <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
+            <td></td>
         </tr>
 }
     </tbody>

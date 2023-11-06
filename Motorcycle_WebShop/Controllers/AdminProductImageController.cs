@@ -11,7 +11,7 @@ using Motorcycle_WebShop.Models;
 
 namespace Motorcycle_WebShop.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminProductImageController : Controller
     {
         private readonly ApplicationDbContext _context;

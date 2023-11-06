@@ -11,7 +11,7 @@ using Motorcycle_WebShop.Data;
 
 namespace Motorcycle_WebShop.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminProductController : Controller
     {
         private readonly ApplicationDbContext _context;

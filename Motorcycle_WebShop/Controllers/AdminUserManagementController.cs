@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Motorcycle_WebShop.Controllers
 {
-    [Authorize(Roles = "admin")]
+    [Authorize(Roles = "Admin")]
     public class AdminUserManagementController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -33,7 +33,9 @@ namespace Motorcycle_WebShop.Controllers
             //TODO IS ACTIVE VISIBLE
             List<ApplicationUser> appUsers = _context.Users.ToList();
             
-            
+            ViewBag.UserRoles = _context.UserRoles.ToList();
+            ViewBag.Roles = _context.Roles.ToList();
+
             return View(appUsers);   
         }
 
@@ -58,6 +60,7 @@ namespace Motorcycle_WebShop.Controllers
         // GET: AdminUserManagement/Create
         public IActionResult Create()
         {
+            ViewBag.Roles = _context.Roles.ToList();
             return View();
         }
 
@@ -66,8 +69,19 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ApplicationUser applicationUser)
+        public async Task<IActionResult> Create(ApplicationUser applicationUser, IdentityUserRole<string> userRole)
         {
+            var role = _context.Roles.FirstOrDefault(x => x.Name == applicationUser.Role);
+            if (role == null)
+            {
+                return NotFound();
+            }
+            userRole = new IdentityUserRole<string>
+            {
+                UserId = applicationUser.Id,
+                RoleId = role.Id
+            };
+
             applicationUser.NormalizedEmail = applicationUser.Email.ToUpper();
             applicationUser.NormalizedUserName = applicationUser.Email.ToUpper();
             applicationUser.UserName = applicationUser.Email;
@@ -89,9 +103,11 @@ namespace Motorcycle_WebShop.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(applicationUser);
+                _context.UserRoles.Add(userRole);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Roles = _context.Roles.ToList();
             return View(applicationUser);
         }
 

@@ -34,7 +34,7 @@ namespace Motorcycle_WebShop.Data
         public string? Role { get; set; }
 
         [StringLength(50, MinimumLength = 2)]
-        public string? Nickname { get; set; }
+        public string? Name { get; set; }
 
         [NotMapped]
         [StringLength(100, MinimumLength = 5, ErrorMessage = "Password is too short. It can contain minimum of 5 characters.")]
@@ -72,6 +72,36 @@ namespace Motorcycle_WebShop.Data
         public DbSet<Category> Category { get; set; }
         public DbSet<ProductCategory> ProductCategory { get; set; }
         public DbSet<OrderItem> OrderItem { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "4bc6d9be - 018d - 4cd9 - acaa - d855942ee8d9",
+                Name = "Chief executive officer",
+                NormalizedName = "CHIEF EXECUTIVE OFFICER"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "811bf54e-ec17-457f-917b-c432d1060070",
+                Name = "Moderator",
+                NormalizedName = "MODERATOR"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "edffea81-92bf-4400-84f3-047a9f72cbc7",
+                Name = "Support",
+                NormalizedName = "SUPPORT"
+            });
+            builder.Entity<IdentityRole>().HasData(new IdentityRole
+            {
+                Id = "2cd04bd9-83ff-49a3-a1b7-e97a5e9896d9",
+                Name = "Secretary",
+                NormalizedName = "SECRETARY"
+            });
+
+            base.OnModelCreating(builder);
+        }
     }
 }
     
