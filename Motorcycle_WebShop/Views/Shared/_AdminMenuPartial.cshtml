@@ -4,18 +4,25 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-@if(SignInManager.IsSignedIn(User) && await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "admin"))
-{
-    <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
-        <div class="dropdown-menu">
-            <a class="dropdown-item" asp-controller="AdminCategory" asp-action="Index">Categories</a>
-            <a class="dropdown-item" asp-controller="AdminProduct" asp-action="Index">Products</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" asp-controller="AdminOrder" asp-action="Index">Orders</a>
-        </div>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="AdminUserManagement" asp-action="Index">User Management</a>
-    </li>
+@{
+    var signedInUser = SignInManager.IsSignedIn(User);
+
+    if (signedInUser && (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Admin")) ||
+        signedInUser && (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Support")) ||
+        signedInUser && (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Chief executive officer")) ||
+        signedInUser && (await UserManager.IsInRoleAsync(UserManager.GetUserAsync(User).Result, "Moderator")))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
+            <div class="dropdown-menu">
+                <a class="dropdown-item" asp-controller="AdminCategory" asp-action="Index">Categories</a>
+                <a class="dropdown-item" asp-controller="AdminProduct" asp-action="Index">Products</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" asp-controller="AdminOrder" asp-action="Index">Orders</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-controller="AdminUserManagement" asp-action="Index">User Management</a>
+        </li>
+    }
 }

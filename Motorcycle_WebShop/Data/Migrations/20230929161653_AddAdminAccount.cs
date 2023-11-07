@@ -38,7 +38,8 @@ namespace Motorcycle_WebShop.Data.Migrations
                                                     "Country, " +
                                                     "FirstName, " +
                                                     "LastName, " +
-                                                    "PostalCode) ");
+                                                    "PostalCode, " +
+                                                    "Role) ");
 
             sb.AppendLine("VALUES(");
             sb.AppendLine($"'{ADMIN_USER_GUID}',");
@@ -59,7 +60,8 @@ namespace Motorcycle_WebShop.Data.Migrations
             sb.AppendLine($"'Croatia',");
             sb.AppendLine($"'Rudolf',");
             sb.AppendLine($"'Wendigo',");
-            sb.AppendLine($"'10132'");
+            sb.AppendLine($"'10132',");
+            sb.AppendLine($"'Admin'");
             sb.AppendLine(")");
 
             migrationBuilder.Sql(sb.ToString());

@@ -4,109 +4,102 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>View @Model.Email</h1>
+<h2>View @Model.Email</h2>
 
 <div>
     <dl class="row">
         <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Role)
         </dt>
-        <dd class = "col-sm-6" >
+        <dd class = "col-sm-8" >
             @Html.DisplayFor(model => model.Role)
         </dd>
-        <hr />
-        <dt class="col-sm-6">
+        <dt class="col-sm-4">
             Avatar
         </dt>
-        <dd class="col-sm-6">
+        <dd class="col-sm-8">
             No Picture
         </dd>
-        <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-6">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Name)
         </dd>
-        <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Email)
         </dt>
-        <dd class = "col-sm-6">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Email)
         </dd>
-        <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             Status
         </dt>
-        <dd class = "col-sm-1">
+        <dd class="col-sm-8">
             @if (!Model.IsActive)
             {
-                <div class="text-center rounded-2 w-75" style="background-color:red; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">Inactive</label>
                 </div>
             }
             else
             {
-                <div class="text-center rounded-2 w-75" style="background-color:lightgreen; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:lightgreen; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">Active</label>
                 </div>
             }
         </dd>
-        <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.EmailConfirmed)
         </dt>
-        <dd class = "col-sm-1">
+        <dd class="col-sm-8">
             @if (!Model.EmailConfirmed)
             {
-                <div class="text-center rounded-2 w-75" style="background-color:red; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">No</label>
                 </div>
             }
             else
             {
-                <div class="text-center rounded-2 w-75" style="background-color:lightgreen; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:lightgreen; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">Yes</label>
                 </div>
             }
         </dd>
-        <hr />
-        <dt class = "col-sm-6">
+        <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.TwoFactorEnabled)
         </dt>
-        <dd class = "col-sm-1">
+        <dd class="col-sm-8">
             @if (!Model.TwoFactorEnabled)
             {
-                <div class="text-center rounded-2 w-75" style="background-color:red; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">No</label>
                 </div>
             }
             else
             {
-                <div class="text-center rounded-2 w-75" style="background-color:lightgreen; text-decoration:none">
+                <div class="text-center rounded-2" style="background-color:lightgreen; text-decoration:none; width:128px">
                     <label style="color:white" class="fw-bold">Yes</label>
                 </div>
             }
         </dd>
-        <hr />
-        <dt class="col-sm-6">
+        <dt class="col-sm-4">
             Last Login At
         </dt>
-        <dd class="col-sm-6">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.LastLoginAt)
         </dd>
-        <hr />
-        <dt class="col-sm-6">
+        <dt class="col-sm-4">
             Last Known IP Address
         </dt>
-        <dd class="col-sm-6">
+        <dd class="col-sm-8">
             @Html.DisplayFor(model => model.LastKnownIpAddress)
         </dd>
     </dl>
 </div>
+<br />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> |
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

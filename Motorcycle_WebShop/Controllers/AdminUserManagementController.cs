@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Http.Extensions;
 
 namespace Motorcycle_WebShop.Controllers
 {
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "Admin,Chief executive officer,Moderator,Support")]
     public class AdminUserManagementController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -132,6 +132,7 @@ namespace Motorcycle_WebShop.Controllers
             {
                 return NotFound();
             }
+            ViewBag.Roles = _context.Roles.ToList();
             return View(user);
         }
 
@@ -140,18 +141,20 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string? id, ApplicationUser applicationUser)
+        public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
             if (id != applicationUser.Id)
             {
                 return NotFound();
             }
+
             ModelState.Remove("Orders");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(applicationUser);
+                    _context.Users.Update(applicationUser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -167,6 +170,7 @@ namespace Motorcycle_WebShop.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewBag.Roles = _context.Roles.ToList();
             return View(applicationUser);
         }
 

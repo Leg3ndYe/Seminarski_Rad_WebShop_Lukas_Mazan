@@ -6,7 +6,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>User Management</h1>
+<h2>List of Users</h2>
 
 <p>
     <a asp-action="Create" style="color:grey; float:right; text-decoration:none">+Create New User</a>
@@ -17,10 +17,10 @@
             <th class="col-sm-2">
                 Role
             </th>
-            <th class="col-sm-1">
+            <th class="col-sm-2">
                 Name
             </th>
-            <th class="col-sm-1">
+            <th class="col-sm-2">
                 E-mail -------------------->
             </th>
             <th class="col-sm-1">
@@ -31,7 +31,7 @@
             </th>
             <th></th>
             <th></th>
-            <th class="col-sm-2">
+            <th class="col-sm-4">
                 Actions
             </th>
             <th></th>
@@ -63,13 +63,13 @@
             <td>
                 @if (!item.EmailConfirmed)
                 {
-                    <div class="text-center rounded-2 w-50" style="background-color:red; text-decoration:none">
+                    <div class="text-center rounded-2 w-75" style="background-color:red">
                         <label style="color:white" class="fw-bold">No</label>
                     </div>
                 }
                 else
                 {
-                    <div class="text-center rounded-2 w-50" style="background-color:lightgreen; text-decoration:none">
+                    <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
                         <label style="color:white" class="fw-bold">Yes</label>
                     </div>
                 }
@@ -77,13 +77,13 @@
             <td>
                 @if(!item.TwoFactorEnabled)
                 {
-                        <div class="text-center rounded-2 w-50" style="background-color:red; text-decoration:none">
+                    <div class="text-center rounded-2 w-50" style="background-color:red">
                         <label style="color:white" class="fw-bold">No</label>
                     </div>
                 }
                 else
                 {
-                        <div class="text-center rounded-2 w-50" style="background-color:lightgreen; text-decoration:none">
+                    <div class="text-center rounded-2 w-50" style="background-color:lightgreen">
                         <label style="color:white" class="fw-bold">Yes</label>
                     </div>
                 }
@@ -91,9 +91,20 @@
             <td></td>
             <td></td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.Id">View</a> |
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">View</a> 
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
+                @{
+                    var roleNamee = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
+                    if ((roleNamee.Name == "Chief executive officer" || roleNamee.Name == "Admin") && !(User.IsInRole("Chief executive officer") || User.IsInRole("Admin")))
+                    {
+                        <label class="btn btn-warning w-20">No Permission</label>
+                    }
+                    else
+                    {
+                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width:128px">Delete</a>
+                    }
+                }
+                     
             </td>
             <td></td>
         </tr>

@@ -16,7 +16,24 @@
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="Role" class="control-label"></label>
-                <input asp-for="Role" class="form-control" />
+                @if (User.IsInRole("Admin") || User.IsInRole("Chief executive officer"))
+                {
+                    <div class="dropdown">
+                        <button class="btn btn-light dropdown-toggle" style="width:415px" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Role</button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            @foreach (var role in ViewBag.Roles)
+                            {
+                                <a class="form-control dropdown-item" href="#">@role.Name</a>
+                            }
+                        </div>
+                    </div>
+                    <input type="hidden" class="form-control" id="selectedItem" asp-for="Role">
+                }
+                else
+                {
+                    <label class="btn btn-light" style="width:415px" type="button">User</label>
+                    <input type="hidden" class="form-control" asp-for="Role" value="User">
+                }
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -54,14 +71,29 @@
                     <input class="form-check-input" asp-for="SendConfirmationEmail" /> @Html.DisplayNameFor(model => model.SendConfirmationEmail)
                 </label>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
-
+<br />
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
+
+<script>
+    const dropdownButton = document.getElementById("dropdownMenuButton");
+    const selectedItemField = document.getElementById("selectedItem");
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+    dropdownItems.forEach(item => {
+        item.addEventListener("click", function () {
+            const selectedValue = this.textContent;
+            dropdownButton.textContent = selectedValue;
+            selectedItemField.value = selectedValue;
+        });
+    });
+</script>
 
