@@ -143,23 +143,53 @@ namespace Motorcycle_WebShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
-            if (id != applicationUser.Id)
+            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var userRole = _context.UserRoles.FirstOrDefault(y => y.UserId == id);
+            var role = _context.Roles.FirstOrDefault(z => z.Name == applicationUser.Role);
+
+            if (id != user.Id)
             {
                 return NotFound();
             }
 
             ModelState.Remove("Orders");
-
             if (ModelState.IsValid)
             {
+                if(user.Role != applicationUser.Role)
+                {
+                    _context.UserRoles.Remove(userRole);
+                    await _context.SaveChangesAsync();
+
+                    userRole = new IdentityUserRole<string>
+                    {
+                        UserId = user.Id,
+                        RoleId = role.Id
+                    };
+                }
+
+                user.Name                   = applicationUser.Name;
+                user.Email                  = applicationUser.Email;
+                user.Password               = applicationUser.Password;
+                user.PasswordConfirmation   = applicationUser.PasswordConfirmation;
+                user.IsActive               = applicationUser.IsActive;
+                user.SendConfirmationEmail  = applicationUser.SendConfirmationEmail;
+                user.EmailConfirmed         = applicationUser.EmailConfirmed;
+
+                var hasher = new PasswordHasher<ApplicationUser>();
+                var passwordhash = hasher.HashPassword(null, user.Password);
+
+                user.PasswordHash = passwordhash;
+
                 try
                 {
-                    _context.Users.Update(applicationUser);
+                    if(user.Role != applicationUser.Role) _context.UserRoles.Add(userRole);
+                    user.Role = applicationUser.Role;
+                    _context.Users.Update(user);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(applicationUser.Id))
+                    if (!UserExists(user.Id))
                     {
                         return NotFound();
                     }
@@ -171,7 +201,7 @@ namespace Motorcycle_WebShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Roles = _context.Roles.ToList();
-            return View(applicationUser);
+            return View(user);
         }
 
         // GET: AdminUserManagement/Delete/5

@@ -31,8 +31,8 @@
                 }
                 else
                 {
-                    <label class="btn btn-light" style="width:415px" type="button">User</label>
-                    <input type="hidden" class="form-control" asp-for="Role" value="User">
+                    <label class="btn btn-light" style="width:415px" type="button">@Model.Role</label>
+                    <input type="hidden" class="form-control" asp-for="Role" value="@Model.Role">
                 }
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
