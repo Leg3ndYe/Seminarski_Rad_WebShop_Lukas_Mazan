@@ -1,9 +1,62 @@
-﻿@model string?
+﻿@model List<Motorcycle_WebShop.Models.Product>
+
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Home page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>@Model</p>
+<h2>Welcome to Brki i Mrki Moto Shop</h2>
+
+<div class="row mt-3">
+    @foreach (var item in Model)
+    {
+        <div class="col-sm-3">
+            <br>
+            <div class="card">
+                <div class="card-body">
+                    <a asp-action="Product" asp-route-id="@item.Id" style="color:inherit; text-decoration:none">
+                        @{
+                            try
+                            {
+                                var image = item.ProductImages.FirstOrDefault(x => x.IsMainImage == true);
+                                if (image != null)
+                                {
+                                    <img class="card-img" src="@image.FilePath" alt="@item.Title">
+                                }
+                                else
+                                {
+                                    <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
+                                }
+                            }
+                            catch
+                            {
+                                <img class="card-img" src="~/images/noimage.jpg" alt="@item.Title">
+                            }
+                        }
+                        <h5 class="card-title">@item.Title</h5>
+                        <p class="card-text">@item.Description</p>
+                    </a>
+                    <table class="table table-condensed table-hover">
+                        <thead>
+                            <tr>
+                                <th> Price </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@item.Price €</td>
+                                <td>
+                                    <form method="post" asp-controller="Cart" asp-action="AddToCart">
+                                        <input type="hidden" name="productId" value="@item.Id" />
+                                        <input type="submit" class="btn btn-success btn-sm" value="Add to cart" style="float:right">
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    }
 </div>
+

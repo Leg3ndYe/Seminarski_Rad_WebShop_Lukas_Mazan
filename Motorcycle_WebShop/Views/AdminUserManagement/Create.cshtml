@@ -17,7 +17,7 @@
                 @if (User.IsInRole("Admin") || User.IsInRole("Chief executive officer"))
                 {
                     <div class="dropdown">
-                        <button class="btn btn-light dropdown-toggle" style="width:415px" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Role</button>
+                        <button class="btn btn-primary dropdown-toggle" style="width:415px" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Select Role</button>
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             @foreach (var role in ViewBag.Roles)
                             {

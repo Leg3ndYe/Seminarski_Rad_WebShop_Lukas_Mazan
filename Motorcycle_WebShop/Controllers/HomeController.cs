@@ -25,9 +25,38 @@ namespace Motorcycle_WebShop.Controllers
             _signInManager = signInManager;
         }
 
-        public IActionResult Index(string? message)
+        public IActionResult Index(int? id, int? categoryId)
         {
-            return View("Index", message);
+            List<Product> products = _context.Product.Where(x => x.IsActive == true).ToList();
+            HashSet<Product> uniqueRandomProducts = new HashSet<Product>();
+            Random rand = new Random();
+            do
+            {
+                var randomProductIndex = rand.Next(products.Count);
+                uniqueRandomProducts.Add(products[randomProductIndex]);
+            } while (uniqueRandomProducts.Count < 12);
+            List<Product> uniqueRandomProductsList = uniqueRandomProducts.ToList();
+
+            if (id != null)
+            {
+                var product = uniqueRandomProductsList.Where(p => p.Id == id).FirstOrDefault();
+                product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == id).ToList();
+                product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
+                return View("ProductDetails", product);
+            }
+
+            foreach (var product in uniqueRandomProductsList)
+            {
+                product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == product.Id).ToList();
+                product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
+            }
+
+            if (categoryId != null)
+            {
+                products = uniqueRandomProductsList.Where(p => p.ProductCategories.Any(p => p.CategoryId == categoryId)).ToList();
+            }
+
+            return View(uniqueRandomProductsList);
         }
 
         public IActionResult Privacy()
