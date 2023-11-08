@@ -63,7 +63,7 @@ namespace Motorcycle_WebShop.Controllers
         // GET: AdminOrderItem/Create
         public IActionResult Create()
         {
-            return View();
+            return NotFound();
         }
 
         // POST: AdminOrderItem/Create
@@ -71,8 +71,10 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProductId,OrderId,Quantity,Price")] OrderItem orderItem)
+        public async Task<IActionResult> Create(int? id, [Bind("Id,ProductId,OrderId,Quantity,Price")] OrderItem orderItem)
         {
+            return NotFound();
+
             if (ModelState.IsValid)
             {
                 _context.Add(orderItem);

@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>List of products</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" style="text-decoration:none">Create New</a>
 </p>
 <table class="table">
     <thead>
@@ -40,7 +40,20 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IsActive)
+                @{
+                    if(item.IsActive == true)
+                    { 
+                        <div class="text-center rounded-2" style="background-color:lightgreen; text-decoration:none; width:96px">
+                            <label style="color:white" class="fw-bold">Active</label>
+                        </div>
+                    }
+                    else
+                    {
+                            <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:96px">
+                            <label style="color:white" class="fw-bold">Inactive</label>
+                        </div>
+                    }
+                }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
@@ -80,9 +93,9 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
+                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">Details</a> 
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
             </td>
         </tr>
 }

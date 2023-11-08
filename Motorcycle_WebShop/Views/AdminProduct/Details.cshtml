@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Product</h4>
+    <h4>Product @Model.Title</h4>
     <hr />
         <div class="row">
         @if (Model.ProductImages != null)
@@ -29,10 +29,23 @@
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IsActive)
+                Product status is set to: 
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsActive)
+            @{
+                if (Model.IsActive == true)
+                {
+                    <div class="text-center rounded-2" style="background-color:lightgreen; text-decoration:none; width:96px">
+                        <label style="color:white" class="fw-bold">Active</label>
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:96px">
+                        <label style="color:white" class="fw-bold">Inactive</label>
+                    </div>
+                }
+            }
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
@@ -61,6 +74,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> 
+    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>

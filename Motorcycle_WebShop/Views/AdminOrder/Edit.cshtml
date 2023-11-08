@@ -120,16 +120,17 @@
         </div>
         <br />
         <div class="form-group">
-            <input type="submit" value="Save" class="btn btn-primary" />
+            <input type="submit" value="Save" class="btn btn-primary" style="width:150px" />
         </div>
     </form>
-    <p></p>
-    <hr />
-    <a asp-action="Index" asp-controller="AdminOrderItem" asp-route-id="@Model.Id">Edit order items</a>
-    <partial name="_OrderItemsPartial" for="@Model.OrderItems" />
+    <div>
+        <hr />
+        <a asp-action="Index" asp-controller="AdminOrderItem" asp-route-id="@Model.Id" class="btn btn-primary" style="width:150px">Edit order items</a>
+        <partial name="_OrderItemsPartial" for="@Model.OrderItems" />
+    </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index" class="btn btn-secondary" style="width:150px">Back to List</a>
 </div>
 
