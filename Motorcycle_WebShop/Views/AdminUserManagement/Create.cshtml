@@ -40,6 +40,11 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="AvatarFilePath" class="control-label">Choose Avatar</label>
+                <input type="file" name="imageFile" asp-for="AvatarFilePath" class="form-control" />
+                <span asp-validation-for="AvatarFilePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
@@ -72,14 +77,12 @@
             <br />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
+                <a asp-action="Index" class="btn btn-secondary">Back to List</a>
             </div>
         </form>
     </div>
 </div>
-<br />
-<div>
-    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-</div>
+
 
 <script>
     const dropdownButton = document.getElementById("dropdownMenuButton");

@@ -66,7 +66,7 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,Description,Active,Quantity,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Id,Title,Description,IsActive,Quantity,Price")] Product product)
         {
             ModelState.Remove("ProductCategories");
             ModelState.Remove("OrderItems");
@@ -104,7 +104,7 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Active,Quantity,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,IsActive,Quantity,Price")] Product product)
         {
             if (id != product.Id)
             {

@@ -57,6 +57,7 @@ namespace Motorcycle_WebShop.Data
         public DateTime? LastLoginAt { get; set; }
 
         public string? LastKnownIpAddress { get; set; }
+        public string? AvatarFilePath { get; set; }
 
         [ForeignKey("UserId")]
         public virtual ICollection<Order> Orders { get; set; }

@@ -19,7 +19,18 @@
             Avatar
         </dt>
         <dd class="col-sm-8">
-            No Picture
+            @if (Model.AvatarFilePath != null)
+            {
+                <div class="col-sm-3">
+                    <img src="@Model.AvatarFilePath" height="75">
+                </div> 
+            }
+            else
+            {
+                <div class="col-sm-3">
+                    <img src="~/images/noimage.jpg"  height="75">
+                </div>
+            }
         </dd>
         <dt class = "col-sm-4">
             @Html.DisplayNameFor(model => model.Name)
@@ -100,6 +111,6 @@
 </div>
 <br />
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">Edit</a> 
     <a asp-action="Index" class="btn btn-secondary">Back to List</a>
 </div>
