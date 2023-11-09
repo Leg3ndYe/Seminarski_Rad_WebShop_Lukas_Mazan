@@ -71,18 +71,17 @@ namespace Motorcycle_WebShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(ApplicationUser applicationUser, IdentityUserRole<string> userRole, IFormFile imageFile)
+        public async Task<IActionResult> Create(ApplicationUser applicationUser, IdentityUserRole<string> userRole)
         {
             var role = AddUserRole(applicationUser, userRole);
             AddUserInfo(applicationUser);
             SendConfirmationEmail(applicationUser);           
 
-            if (HttpContext.Request.Form.Files.Count > 0) ModelState.Remove("imageFile");
             ModelState.Remove("Orders");         
             //image file null for some reason...
             if (ModelState.IsValid)
             {
-                UploadImage(applicationUser,imageFile);
+                UploadImage(applicationUser);
                 _context.Add(applicationUser);
                 _context.UserRoles.Add(role);
                 await _context.SaveChangesAsync();
@@ -116,11 +115,11 @@ namespace Motorcycle_WebShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, ApplicationUser applicationUser)
         {
-            var user = _context.Users.FirstOrDefault(x => x.Id == id);
+            var newuser = _context.Users.FirstOrDefault(x => x.Id == id);
             var userRole = _context.UserRoles.FirstOrDefault(y => y.UserId == id);
             var role = _context.Roles.FirstOrDefault(z => z.Name == applicationUser.Role);
 
-            if (id != user.Id)
+            if (id != newuser.Id)
             {
                 return NotFound();
             }
@@ -128,30 +127,31 @@ namespace Motorcycle_WebShop.Controllers
             ModelState.Remove("Orders");
             if (ModelState.IsValid)
             {
-                if(user.Role != applicationUser.Role)
+                if(newuser.Role != applicationUser.Role)
                 {
                     _context.UserRoles.Remove(userRole);
                     await _context.SaveChangesAsync();
 
                     userRole = new IdentityUserRole<string>
                     {
-                        UserId = user.Id,
+                        UserId = newuser.Id,
                         RoleId = role.Id
                     };
                 }
 
-                UserInfo(user, applicationUser);
+                UserInfo(newuser, applicationUser);
+                UploadImage(newuser);
 
                 try
                 {
-                    if(user.Role != applicationUser.Role) _context.UserRoles.Add(userRole);
-                    user.Role = applicationUser.Role;
-                    _context.Users.Update(user);
+                    if(newuser.Role != applicationUser.Role) _context.UserRoles.Add(userRole);
+                    newuser.Role = applicationUser.Role;
+                    _context.Users.Update(newuser);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
+                    if (!UserExists(newuser.Id))
                     {
                         return NotFound();
                     }
@@ -163,7 +163,7 @@ namespace Motorcycle_WebShop.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewBag.Roles = _context.Roles.ToList();
-            return View(user);
+            return View(newuser);
         }
 
         // GET: AdminUserManagement/Delete/5
@@ -213,10 +213,10 @@ namespace Motorcycle_WebShop.Controllers
             return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        public async void UploadImage(ApplicationUser applicationUser, IFormFile imageFile)
+        public async void UploadImage(ApplicationUser applicationUser)
         {
-            imageFile = HttpContext.Request.Form.Files.FirstOrDefault();
-            var uploadPath = Path.Combine("wwwroot", "images", "avatars", applicationUser.Id.ToString());
+            var imageFile = HttpContext.Request.Form.Files.FirstOrDefault();
+            var uploadPath = Path.Combine("wwwroot", "images", "avatars", applicationUser.Email);
             if (!Directory.Exists(uploadPath))
             {
                 Directory.CreateDirectory(uploadPath);
@@ -250,6 +250,10 @@ namespace Motorcycle_WebShop.Controllers
 
         public void AddUserInfo(ApplicationUser applicationUser)
         {
+            if (applicationUser.Name == null)
+            {
+                applicationUser.Name = "-----";
+            }
             applicationUser.NormalizedEmail = applicationUser.Email.ToUpper();
             applicationUser.NormalizedUserName = applicationUser.Email.ToUpper();
             applicationUser.UserName = applicationUser.Email;
@@ -281,20 +285,24 @@ namespace Motorcycle_WebShop.Controllers
             }
         }
 
-        public void UserInfo(ApplicationUser user, ApplicationUser applicationUser)
+        public void UserInfo(ApplicationUser newuser, ApplicationUser applicationUser)
         {
-            user.Name = applicationUser.Name;
-            user.Email = applicationUser.Email;
-            user.Password = applicationUser.Password;
-            user.PasswordConfirmation = applicationUser.PasswordConfirmation;
-            user.IsActive = applicationUser.IsActive;
-            user.SendConfirmationEmail = applicationUser.SendConfirmationEmail;
-            user.EmailConfirmed = applicationUser.EmailConfirmed;
+            if(applicationUser.Name == null)
+            {
+                applicationUser.Name = "-----";
+            }
+            newuser.Name = applicationUser.Name;
+            newuser.Email = applicationUser.Email;
+            newuser.Password = applicationUser.Password;
+            newuser.PasswordConfirmation = applicationUser.PasswordConfirmation;
+            newuser.IsActive = applicationUser.IsActive;
+            newuser.SendConfirmationEmail = applicationUser.SendConfirmationEmail;
+            newuser.EmailConfirmed = applicationUser.EmailConfirmed;
 
             var hasher = new PasswordHasher<ApplicationUser>();
-            var passwordhash = hasher.HashPassword(null, user.Password);
+            var passwordhash = hasher.HashPassword(null, newuser.Password);
 
-            user.PasswordHash = passwordhash;
+            newuser.PasswordHash = passwordhash;
         }
 
     }

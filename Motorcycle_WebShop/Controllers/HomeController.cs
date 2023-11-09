@@ -28,14 +28,23 @@ namespace Motorcycle_WebShop.Controllers
         public IActionResult Index(int? id, int? categoryId)
         {
             List<Product> products = _context.Product.Where(x => x.IsActive == true).ToList();
+            List<Product> uniqueRandomProductsList = new List<Product>();
             HashSet<Product> uniqueRandomProducts = new HashSet<Product>();
             Random rand = new Random();
-            do
+            if(products.Count >= 12)
             {
-                var randomProductIndex = rand.Next(products.Count);
-                uniqueRandomProducts.Add(products[randomProductIndex]);
-            } while (uniqueRandomProducts.Count < 12);
-            List<Product> uniqueRandomProductsList = uniqueRandomProducts.ToList();
+                do
+                {
+                    var randomProductIndex = rand.Next(products.Count);
+                    uniqueRandomProducts.Add(products[randomProductIndex]);
+                } while (uniqueRandomProducts.Count < 12);
+                uniqueRandomProductsList = uniqueRandomProducts.ToList();
+            }
+            else
+            {
+                uniqueRandomProductsList = products;
+                
+            }
 
             if (id != null)
             {

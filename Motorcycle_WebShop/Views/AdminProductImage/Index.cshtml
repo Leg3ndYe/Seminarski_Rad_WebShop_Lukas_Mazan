@@ -4,22 +4,22 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>List of images</h1>
 
 <p>
-    <a asp-action="Create" asp-route-id="@ViewBag.ProductId">Create New</a>
+    <a asp-action="Create" asp-route-id="@ViewBag.ProductId" style="text-decoration:none">Add New</a>
 </p>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.IsMainImage)
+                Main Image
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.FilePath)
+                Image
             </th>
             <th></th>
         </tr>
@@ -28,24 +28,34 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.IsMainImage)
+                    @{
+                        if(!item.IsMainImage)
+                        {
+                            <div class="text-center rounded-2" style="background-color:red; text-decoration:none; width:96px">
+                                <label style="color:white" class="fw-bold">No</label>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center rounded-2" style="background-color:limegreen; text-decoration:none; width:96px">
+                                <label style="color:white" class="fw-bold">Yes</label>
+                            </div>
+                        }
+                    }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
                 <img src="@item.FilePath" alt="@item.Title" height="75">
-                @* @Html.DisplayFor(modelItem => item.FilePath) *@
             </td>
             <td>
-                @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
             </td>
         </tr>
-}
+        }
     </tbody>
 </table>
-<p>
-    <a asp-controller="AdminProduct" asp-action="Edit" asp-route-id="@ViewBag.ProductId">Back to Product</a>
-</p>
+<div>
+    <a asp-controller="AdminProduct" asp-action="Edit" asp-route-id="@ViewBag.ProductId" class="btn btn-secondary">Back to Product</a>
+</div>
