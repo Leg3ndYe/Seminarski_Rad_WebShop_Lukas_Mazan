@@ -44,7 +44,7 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td>@item.Price €</td>
+                                <td>@item.Price.ToString("C")</td>
                                 <td>
                                     <form method="post" asp-controller="Cart" asp-action="AddToCart">
                                         <input type="hidden" name="productId" value="@item.Id" />

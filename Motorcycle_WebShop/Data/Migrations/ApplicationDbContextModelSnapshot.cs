@@ -318,7 +318,7 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Category");
+                    b.ToTable("Category", (string)null);
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.Order", b =>
@@ -427,7 +427,7 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Order");
+                    b.ToTable("Order", (string)null);
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.OrderItem", b =>
@@ -456,7 +456,7 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItem", (string)null);
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.Product", b =>
@@ -487,7 +487,54 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product");
+                    b.ToTable("Product", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "Kada je Yamaha prije desetak godina predstavila prvi model MT iz asortimana Hyper Naked, svijet motocikla zauvijek se promijenio. Uz jasnu usredotočenost na okretni moment, okretnost i osjećaj, asortiman modela MT vozačima je pružio mogućnost da dožive sirove emocije i uzbuđenje na zahtjev koji svaki Hyper Naked model čine posebnim.",
+                            IsActive = true,
+                            Price = 15199m,
+                            Quantity = 14m,
+                            Title = "YAMAHA MT-10"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "U 2015. prvi je TRACER 900 zauvijek promijenio klasu sportskih krstarica. Uz svoj CP3 agregat velikog okretnog momenta, sportsko podvozje i izvanrednu svestranost, Tracer 900 je bio odabir više od 50.000 europskih vozača koji žele okretan i uzbudljiv višenamjenski motocikl s puno stava. Možda i nije iznenađenje što je to najprodavaniji motocikl u klasi.",
+                            IsActive = true,
+                            Price = 16499m,
+                            Quantity = 10m,
+                            Title = "YAMAHA TRACER 9"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = "Model R1 najusredotočeniji je i najsuvremeniji motocikl kategorije Supersport kojeg je Yamaha ikada napravila, sve od predstavljanja originalnog modela prije više od 25 godina. Gotovo sve na najnovijem modelu R1 ima svoje izravno podrijetlo na trkalištu, gdje su Yamahine tvorničke trkaće momčadi i probni vozači razvijali i testirali naprednu tehnologiju koju sada možete vidjeti i isprobati na svom modelu R1.",
+                            IsActive = true,
+                            Price = 17399m,
+                            Quantity = 21m,
+                            Title = "YAMAHA R1"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Ovo je motocikl na kojem možete uživati u gotovo svakoj situaciji. Njegova jednostavna ergonomija posebno je dizajnirana kako bi vam pružila otvoren i prilagodljiv položaj za vožnju koji svaku vožnju čini ugodnijom. Od uskih zavojitih uličica do brzih otvorenih zavoja ili opuštenog krstarenja gradom, XSR900 spreman je na sve. ",
+                            IsActive = true,
+                            Price = 10199m,
+                            Quantity = 13m,
+                            Title = "YAMAHA XSR900"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Description = "Ključ iznimnih sportskih i putnih performansi modela NIKEN njegov je naprednom tehnologijom izrađen prednji kraj. Ovaj jedinstveni dizajn s dva nagibna prednja kotača ima veliku dodirnu površinu s cestom, čime pruža brojne prednosti. ",
+                            IsActive = true,
+                            Price = 15999m,
+                            Quantity = 11m,
+                            Title = "YAMAHA NIKEN"
+                        });
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.ProductCategory", b =>
@@ -510,7 +557,7 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductCategory");
+                    b.ToTable("ProductCategory", (string)null);
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.ProductImage", b =>
@@ -541,36 +588,169 @@ namespace Motorcycle_WebShop.Data.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("ProductImage");
-                });
+                    b.ToTable("ProductImage", (string)null);
 
-            modelBuilder.Entity("Motorcycle_WebShop.Models.UserAvatar", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("AvatarFilePath")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Title")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAvatar");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            FilePath = "/images/products/1/main.jpg",
+                            IsMainImage = true,
+                            ProductId = 1,
+                            Title = "MT-10.main"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            FilePath = "/images/products/1/1.jpg",
+                            IsMainImage = false,
+                            ProductId = 1,
+                            Title = "MT-10.01"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            FilePath = "/images/products/1/2.jpg",
+                            IsMainImage = false,
+                            ProductId = 1,
+                            Title = "MT-10.02"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            FilePath = "/images/products/1/3.jpg",
+                            IsMainImage = false,
+                            ProductId = 1,
+                            Title = "MT-10.03"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            FilePath = "/images/products/2/main.jpg",
+                            IsMainImage = true,
+                            ProductId = 2,
+                            Title = "TRACER 9.main"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            FilePath = "/images/products/2/1.jpg",
+                            IsMainImage = false,
+                            ProductId = 2,
+                            Title = "TRACER 9.01"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            FilePath = "/images/products/2/2.jpg",
+                            IsMainImage = false,
+                            ProductId = 2,
+                            Title = "TRACER 9.02"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            FilePath = "/images/products/2/3.jpg",
+                            IsMainImage = false,
+                            ProductId = 2,
+                            Title = "TRACER 9.03"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            FilePath = "/images/products/3/main.jpg",
+                            IsMainImage = true,
+                            ProductId = 3,
+                            Title = "R1.main"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            FilePath = "/images/products/3/1.jpg",
+                            IsMainImage = false,
+                            ProductId = 3,
+                            Title = "R1.01"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            FilePath = "/images/products/3/2.jpg",
+                            IsMainImage = false,
+                            ProductId = 3,
+                            Title = "R1.02"
+                        },
+                        new
+                        {
+                            Id = 12,
+                            FilePath = "/images/products/3/3.jpg",
+                            IsMainImage = false,
+                            ProductId = 3,
+                            Title = "R1.03"
+                        },
+                        new
+                        {
+                            Id = 13,
+                            FilePath = "/images/products/4/main.jpg",
+                            IsMainImage = true,
+                            ProductId = 4,
+                            Title = "XSR900.main"
+                        },
+                        new
+                        {
+                            Id = 14,
+                            FilePath = "/images/products/4/1.jpg",
+                            IsMainImage = false,
+                            ProductId = 4,
+                            Title = "XSR900.01"
+                        },
+                        new
+                        {
+                            Id = 15,
+                            FilePath = "/images/products/4/2.jpg",
+                            IsMainImage = false,
+                            ProductId = 4,
+                            Title = "XSR900.02"
+                        },
+                        new
+                        {
+                            Id = 16,
+                            FilePath = "/images/products/4/3.jpg",
+                            IsMainImage = false,
+                            ProductId = 4,
+                            Title = "XSR900.03"
+                        },
+                        new
+                        {
+                            Id = 17,
+                            FilePath = "/images/products/5/main.jpg",
+                            IsMainImage = true,
+                            ProductId = 5,
+                            Title = "NIKEN.main"
+                        },
+                        new
+                        {
+                            Id = 18,
+                            FilePath = "/images/products/5/1.jpg",
+                            IsMainImage = false,
+                            ProductId = 5,
+                            Title = "NIKEN.01"
+                        },
+                        new
+                        {
+                            Id = 19,
+                            FilePath = "/images/products/5/2.jpg",
+                            IsMainImage = false,
+                            ProductId = 5,
+                            Title = "NIKEN.02"
+                        },
+                        new
+                        {
+                            Id = 20,
+                            FilePath = "/images/products/5/3.jpg",
+                            IsMainImage = false,
+                            ProductId = 5,
+                            Title = "NIKEN.03"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -672,20 +852,9 @@ namespace Motorcycle_WebShop.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Motorcycle_WebShop.Models.UserAvatar", b =>
-                {
-                    b.HasOne("Motorcycle_WebShop.Data.ApplicationUser", null)
-                        .WithMany("UserAvatars")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Motorcycle_WebShop.Data.ApplicationUser", b =>
                 {
                     b.Navigation("Orders");
-
-                    b.Navigation("UserAvatars");
                 });
 
             modelBuilder.Entity("Motorcycle_WebShop.Models.Category", b =>

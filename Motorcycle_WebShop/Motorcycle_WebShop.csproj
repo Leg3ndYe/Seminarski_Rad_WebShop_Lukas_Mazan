@@ -22,6 +22,11 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\products\1\" />
+    <Folder Include="wwwroot\images\products\2\" />
+    <Folder Include="wwwroot\images\products\3\" />
+    <Folder Include="wwwroot\images\products\4\" />
+    <Folder Include="wwwroot\images\products\5\" />
   </ItemGroup>
 
 </Project>
