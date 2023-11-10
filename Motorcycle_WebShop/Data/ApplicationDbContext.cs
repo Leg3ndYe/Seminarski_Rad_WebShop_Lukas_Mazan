@@ -531,8 +531,426 @@ namespace Motorcycle_WebShop.Data
                 Title = "NT1100.03",
                 FilePath = "/images/products/10/3.jpg"
             });
-            
 
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 11,
+                Title = "KAWASAKI VULCAN 900",
+                Description = "Turn heads as you take on your next adventure aboard a Kawasaki Vulcan 900 cruiser. Right off the showroom floor, the 903cc V-twin powered cruiser has all the style and attitude of a one-of-a-kind build. From the detailed paint to the exciting exhaust, the Vulcan 900 Series is an artful expression of individuality. ",
+                IsActive = true,
+                Price = 8999m,
+                Quantity = 15
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 41,
+                ProductId = 11,
+                IsMainImage = true,
+                Title = "VULCAN 900.main",
+                FilePath = "/images/products/11/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 42,
+                ProductId = 11,
+                IsMainImage = false,
+                Title = "VULCAN 900.01",
+                FilePath = "/images/products/11/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 43,
+                ProductId = 11,
+                IsMainImage = false,
+                Title = "VULCAN 900.02",
+                FilePath = "/images/products/11/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 44,
+                ProductId = 11,
+                IsMainImage = false,
+                Title = "VULCAN 900.03",
+                FilePath = "/images/products/11/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 12,
+                Title = "KAWASAKI NINJA 1000SX",
+                Description = "The sport appeal of Kawasaki Ninja motorcycles goes well beyond the racetrack with the remarkably versatile Ninja 1000SX sportbike. Enjoy pure sporting thrill with superior power, two-up touring capability and advanced rider support electronics. A force to be reckoned with on the track and a machine built for weekend trips. ",
+                IsActive = true,
+                Price = 17549m,
+                Quantity = 11
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 45,
+                ProductId = 12,
+                IsMainImage = true,
+                Title = "NINJA 1000SX.main",
+                FilePath = "/images/products/12/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 46,
+                ProductId = 12,
+                IsMainImage = false,
+                Title = "NINJA 1000SX.01",
+                FilePath = "/images/products/12/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 47,
+                ProductId = 12,
+                IsMainImage = false,
+                Title = "NINJA 1000SX.02",
+                FilePath = "/images/products/12/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 48,
+                ProductId = 12,
+                IsMainImage = false,
+                Title = "NINJA 1000SX.03",
+                FilePath = "/images/products/12/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 13,
+                Title = "KAWASAKI NINJA ZX-10R",
+                Description = "The Ninja ZX™-10R supersport bike is built for those who rise to the challenge. Hailing from the proving grounds of the FIM WorldSBK Championship, the Ninja ZX-10R is the direct result of decades of world-class road racing innovation, carrying the Kawasaki Racing Team (KRT) to six consecutive championship titles. Push your limits aboard the Ninja ZX-10R. ",
+                IsActive = true,
+                Price = 17799m,
+                Quantity = 17
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 49,
+                ProductId = 13,
+                IsMainImage = true,
+                Title = "NINJA ZX-10R.main",
+                FilePath = "/images/products/13/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 50,
+                ProductId = 13,
+                IsMainImage = false,
+                Title = "NINJA ZX-10R.01",
+                FilePath = "/images/products/13/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 51,
+                ProductId = 13,
+                IsMainImage = false,
+                Title = "NINJA ZX-10R.02",
+                FilePath = "/images/products/13/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 52,
+                ProductId = 13,
+                IsMainImage = false,
+                Title = "NINJA ZX-10R.03",
+                FilePath = "/images/products/13/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 14,
+                Title = "KAWASAKI Z900",
+                Description = " ",
+                IsActive = true,
+                Price = 9999m,
+                Quantity = 21
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 53,
+                ProductId = 14,
+                IsMainImage = true,
+                Title = "Z900.main",
+                FilePath = "/images/products/14/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 54,
+                ProductId = 14,
+                IsMainImage = false,
+                Title = "Z900.01",
+                FilePath = "/images/products/14/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 55,
+                ProductId = 14,
+                IsMainImage = false,
+                Title = "Z900.02",
+                FilePath = "/images/products/14/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 56,
+                ProductId = 14,
+                IsMainImage = false,
+                Title = "Z900.03",
+                FilePath = "/images/products/14/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 15,
+                Title = "KAWASAKI NINJA H2R",
+                Description = "The development of the Ninja H2R motorcycle goes beyond the boundaries of any other Kawasaki motorcycle. Born through the unprecedented collaboration between multiple divisions within the Kawasaki Heavy Industries, Ltd. (KHI) organization, the limited-production supercharged model represents the unbridled pinnacle of Kawasaki engineering, with astonishing acceleration and mind-bending top speed suitable only for the track. ",
+                IsActive = true,
+                Price = 62299m,
+                Quantity = 5
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 57,
+                ProductId = 15,
+                IsMainImage = true,
+                Title = "NINJA H2R.main",
+                FilePath = "/images/products/15/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 58,
+                ProductId = 15,
+                IsMainImage = false,
+                Title = "NINJA H2R.01",
+                FilePath = "/images/products/15/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 59,
+                ProductId = 15,
+                IsMainImage = false,
+                Title = "NINJA H2R.02",
+                FilePath = "/images/products/15/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 60,
+                ProductId = 15,
+                IsMainImage = false,
+                Title = "NINJA H2R.03",
+                FilePath = "/images/products/15/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 16,
+                Title = "SUZUKI GSX-R1000R",
+                Description = "At the pinnacle of the GSX-R family of ultra-high-performance motorcycles, the 2024 GSX-R1000R’s versatile engine provides class-leading power that is delivered smoothly and controllably across a broad rpm range. Like the original GSX-R1000, the 2024’s compact chassis delivers nimble handling with excellent suspension feel and braking control, ready to conquer a racetrack or cruise a country road.",
+                IsActive = true,
+                Price = 18499m,
+                Quantity = 13
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 61,
+                ProductId = 16,
+                IsMainImage = true,
+                Title = "GSX-R1000R.main",
+                FilePath = "/images/products/16/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 62,
+                ProductId = 16,
+                IsMainImage = false,
+                Title = "GSX-R1000R.01",
+                FilePath = "/images/products/16/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 63,
+                ProductId = 16,
+                IsMainImage = false,
+                Title = "GSX-R1000R.02",
+                FilePath = "/images/products/16/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 64,
+                ProductId = 16,
+                IsMainImage = false,
+                Title = "GSX-R1000R.03",
+                FilePath = "/images/products/16/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 17,
+                Title = "SUZUKI HAYABUSA",
+                Description = "The Suzuki Hayabusa remains firmly in place as motorcycling’s Ultimate Sportbike. The 2024 version of Suzuki’s flagship sportbike continues to be propelled by a muscular, refined inline four-cylinder engine housed in a proven, yet modernized chassis with incomparable manners, managed by an unequaled suite of electronic rider aids within stunning aerodynamic bodywork that is distinctly Hayabusa.",
+                IsActive = true,
+                Price = 18999m,
+                Quantity = 20
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 65,
+                ProductId = 17,
+                IsMainImage = true,
+                Title = "HAYABUSA.main",
+                FilePath = "/images/products/17/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 66,
+                ProductId = 17,
+                IsMainImage = false,
+                Title = "HAYABUSA.01",
+                FilePath = "/images/products/17/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 67,
+                ProductId = 17,
+                IsMainImage = false,
+                Title = "HAYABUSA.02",
+                FilePath = "/images/products/17/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 68,
+                ProductId = 17,
+                IsMainImage = false,
+                Title = "HAYABUSA.03",
+                FilePath = "/images/products/17/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 18,
+                Title = "SUZUKI KATANA",
+                Description = "An exotic blend of heritage, styling, and engineering—the refined 2024 Suzuki KATANA is poised to revolutionize your cherished motorcycle collection. Named after the legendary samurai sword, the KATANA retains its iconic design and features technical updates designed to enhance the riding pleasure of this distinctive motorcycle.",
+                IsActive = true,
+                Price = 13899m,
+                Quantity = 7
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 69,
+                ProductId = 18,
+                IsMainImage = true,
+                Title = "KATANA.main",
+                FilePath = "/images/products/18/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 70,
+                ProductId = 18,
+                IsMainImage = false,
+                Title = "KATANA.01",
+                FilePath = "/images/products/18/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 71,
+                ProductId = 18,
+                IsMainImage = false,
+                Title = "KATANA.02",
+                FilePath = "/images/products/18/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 72,
+                ProductId = 18,
+                IsMainImage = false,
+                Title = "KATANA.03",
+                FilePath = "/images/products/18/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 19,
+                Title = "SUZUKI GSX-8S",
+                Description = "Ready to make a statement? Swing a leg over the 2024 Suzuki GSX-8S and let your riding speak volumes. Engineered from the ground up as an innovative path for future Suzuki sportbikes, the GSX-8S is a naked street fighter with a robust engine, an agile chassis, a suite of rider aids, plus stunning looks with a smart price that is a statement to your brilliance.",
+                IsActive = true,
+                Price = 8999m,
+                Quantity = 15
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 73,
+                ProductId = 19,
+                IsMainImage = true,
+                Title = "GSX-8S.main",
+                FilePath = "/images/products/19/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 74,
+                ProductId = 19,
+                IsMainImage = false,
+                Title = "GSX-8S.01",
+                FilePath = "/images/products/19/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 75,
+                ProductId = 19,
+                IsMainImage = false,
+                Title = "GSX-8S.02",
+                FilePath = "/images/products/19/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 76,
+                ProductId = 19,
+                IsMainImage = false,
+                Title = "GSX-8S.03",
+                FilePath = "/images/products/19/3.jpg"
+            });
+
+            builder.Entity<Product>().HasData(new Product
+            {
+                Id = 20,
+                Title = "SUZUKI GSX-S1000GT",
+                Description = "The 2024 GSX-S1000GT intelligently combines the championship performance of its GSX-R1000-based engine with a nimble, lightweight chassis to provide riders with an exciting and comfortable GT riding experience.  Here is a Grand Tourer with sportbike level functionality, avantgarde styling, and an extensive selection of optional equipment like truly functional, integrated side cases.",
+                IsActive = true,
+                Price = 13499m,
+                Quantity = 15
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 77,
+                ProductId = 20,
+                IsMainImage = true,
+                Title = "GSX-S1000GT.main",
+                FilePath = "/images/products/20/main.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 78,
+                ProductId = 20,
+                IsMainImage = false,
+                Title = "GSX-S1000GT.01",
+                FilePath = "/images/products/20/1.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 79,
+                ProductId = 20,
+                IsMainImage = false,
+                Title = "GSX-S1000GT.02",
+                FilePath = "/images/products/20/2.jpg"
+            });
+            builder.Entity<ProductImage>().HasData(new ProductImage
+            {
+                Id = 80,
+                ProductId = 20,
+                IsMainImage = false,
+                Title = "GSX-S1000GT.03",
+                FilePath = "/images/products/20/3.jpg"
+            });
             base.OnModelCreating(builder);
         }
     }
