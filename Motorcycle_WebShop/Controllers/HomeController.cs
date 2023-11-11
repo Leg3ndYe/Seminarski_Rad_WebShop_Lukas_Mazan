@@ -3,10 +3,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Build.Framework;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Motorcycle_WebShop.Data;
 using Motorcycle_WebShop.Extensions;
 using Motorcycle_WebShop.Models;
 using System.Diagnostics;
+using System.Linq;
 
 namespace Motorcycle_WebShop.Controllers
 {
@@ -73,11 +75,11 @@ namespace Motorcycle_WebShop.Controllers
             return View();
         }
 
-        public IActionResult Product(int? id, int? categoryId)
+        public IActionResult Product(int? id, int? categoryId, string? sentence)
         {
             List<Product> products = _context.Product.Where(x => x.IsActive == true).ToList();
 
-            if(id != null)
+            if (id != null)
             {
                 var product = products.Where(p => p.Id == id).FirstOrDefault();
                 product.ProductImages = _context.ProductImage.Where(pi => pi.ProductId == id).ToList();
@@ -95,6 +97,30 @@ namespace Motorcycle_WebShop.Controllers
             {
                 products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == categoryId)).ToList();
             }
+
+            if (!String.IsNullOrEmpty(sentence))
+            {
+                products = products.Where(p => p.Title.Contains(sentence, StringComparison.CurrentCultureIgnoreCase)).ToList();
+
+
+                //Do ovog nikad ne dodje jer baci samo ovo iznad
+                if (sentence.ToLower() == "asc")
+                {
+                    products = products.OrderBy(p => p.Title).ToList();
+                }
+                if (sentence.ToLower() == "desc")
+                {
+                    products = products.OrderByDescending(p => p.Title).ToList();
+                }
+            }
+
+            //if (search.Page_number < 1) search.Page_number = 1;
+            //if (search.Per_page > 0 && search.Page_number > 0)
+            //{
+            //    products = products.Skip((search.Page_number - 1) * search.Per_page).Take(search.Per_page).ToList();
+            //}
+
+
 
             ViewBag.Categories = _context.Category.ToList();
             return View(products);

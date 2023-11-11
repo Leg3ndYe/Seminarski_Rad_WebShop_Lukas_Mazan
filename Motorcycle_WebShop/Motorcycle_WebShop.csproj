@@ -21,7 +21,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="ViewModels\" />
     <Folder Include="wwwroot\images\avatars\" />
+    <Folder Include="wwwroot\images\logo\" />
     <Folder Include="wwwroot\images\products\1\" />
     <Folder Include="wwwroot\images\products\2\" />
     <Folder Include="wwwroot\images\products\3\" />

@@ -8,6 +8,18 @@
 
 <div class="row mb-5">
     <div class="col-2">
+        <form asp-action="Product" asp-controller="Home">
+            <div class="form-group">
+                @* <input type="search" class="form-control" /> *@ 
+                <input name="sentence" type="text" placeholder="Search" class="form-control" />
+                @* <input type="hidden" asp-for="@Model.SearchEngine.Order_by" />
+                <input type="hidden" asp-for="@Model.SearchEngine.Page_number" />
+                <input type="hidden" asp-for="@Model.SearchEngine.Per_page" /> *@
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+    <div class="col-2">
         <div class="dropdown">
             <button class="btn btn-secondary dropdown-toggle" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Filter by category

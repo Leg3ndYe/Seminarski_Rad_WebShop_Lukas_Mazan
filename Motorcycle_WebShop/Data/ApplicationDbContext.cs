@@ -662,7 +662,7 @@ namespace Motorcycle_WebShop.Data
             {
                 Id = 14,
                 Title = "KAWASAKI Z900",
-                Description = " ",
+                Description = "The Z900 epitomizes Kawasaki's belief of what the ideal supernaked should be. With a 948cc engine and ultra-lightweight chassis, every ride is met with exceptional power, responsiveness and excitement. Make your presence known on the streets with signature Sugomi-inspired styling and a commanding ride position. ",
                 IsActive = true,
                 Price = 9999m,
                 Quantity = 21
