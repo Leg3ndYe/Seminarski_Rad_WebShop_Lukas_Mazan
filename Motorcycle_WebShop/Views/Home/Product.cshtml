@@ -4,37 +4,43 @@
     ViewData["Title"] = "Product";
 }
 
-<h2>Product list</h2>
+<h2>Products</h2>
 
-<div class="row mb-5">
-    <div class="col-2">
-        <form asp-action="Product" asp-controller="Home">
-            <div class="form-group">
-                @* <input type="search" class="form-control" /> *@ 
-                <input name="sentence" type="text" placeholder="Search" class="form-control" />
-                @* <input type="hidden" asp-for="@Model.SearchEngine.Order_by" />
-                <input type="hidden" asp-for="@Model.SearchEngine.Page_number" />
-                <input type="hidden" asp-for="@Model.SearchEngine.Per_page" /> *@
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
-    <div class="col-2">
-        <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                Filter by category
-            </button>
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @foreach(var item in ViewBag.Categories)
-                {
-                    <a class="dropdown-item" asp-action="Product" asp-route-categoryId ="@item.Id">@item.Title</a>
-                }
-            </div>
+<div class="row">
+    
+    <form class="row" asp-action="Product" asp-controller="Home">
+        <div class="col-sm-1"> 
+            <p>Show x</p>
+            <input type="number" name="per_page" class="form-control" value="@Model.Count">
         </div>
-    </div>
-    <div class="col-2">
-        <a asp-action="Product" class="btn btn-warning">Clear filter</a>
-    </div>
+
+        <div class="col-sm-8">
+            <p>Search for product by name</p>
+            <div class="input-group">
+                <input name="sentence" type="text" placeholder="Search" class="form-control" />
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div> 
+        </div>
+        
+        <div class="col-sm-2">
+            <p>Select Category</p>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" style="width:190px" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach(var item in ViewBag.Categories)
+                    {
+                        <a class="dropdown-item form-control" href="#">@item.Title</a>
+                    }
+                </div>
+            </div> 
+            <input type="hidden" id="selectedItem" name="categoryTitle" class="form-control">
+        </div>
+
+        <div class="col-sm-1">
+            <p>Reset Filter</p>
+            <a asp-action="Product" class="btn btn-secondary" style="width:108px">Reset</a>
+        </div>
+    </form>
 </div>
 <div class="row mt-3"> 
     @foreach (var item in Model) {
@@ -87,3 +93,18 @@
          </div>
     }
 </div>
+
+<script>
+    const dropdownButton = document.getElementById("dropdownMenuButton");
+    const selectedItemField = document.getElementById("selectedItem");
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+    dropdownItems.forEach(item => {
+        item.addEventListener("click", function () {
+            const selectedValue = this.textContent;
+            dropdownButton.textContent = selectedValue;
+            selectedItemField.value = selectedValue;
+        });
+    });
+</script>
+

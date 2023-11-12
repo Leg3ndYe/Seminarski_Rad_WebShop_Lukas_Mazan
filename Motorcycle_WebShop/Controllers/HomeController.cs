@@ -75,7 +75,7 @@ namespace Motorcycle_WebShop.Controllers
             return View();
         }
 
-        public IActionResult Product(int? id, int? categoryId, string? sentence)
+        public IActionResult Product(int? id, string? categoryTitle, string? sentence, int per_page)
         {
             List<Product> products = _context.Product.Where(x => x.IsActive == true).ToList();
 
@@ -93,17 +93,19 @@ namespace Motorcycle_WebShop.Controllers
                 product.ProductCategories = _context.ProductCategory.Where(pc => pc.ProductId == product.Id).ToList();
             }
 
-            if (categoryId != null)
+            if (categoryTitle != null)
             {
-                products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == categoryId)).ToList();
+                
+                var category = _context.Category.FirstOrDefault(c => c.Title == categoryTitle);
+                products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == category.Id)).ToList();
             }
 
             if (!String.IsNullOrEmpty(sentence))
             {
-                products = products.Where(p => p.Title.Contains(sentence, StringComparison.CurrentCultureIgnoreCase)).ToList();
-
-
-                //Do ovog nikad ne dodje jer baci samo ovo iznad
+                if (sentence.ToLower() != "asc" && sentence.ToLower() != "desc")
+                {
+                    products = products.Where(p => p.Title.Contains(sentence, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                }
                 if (sentence.ToLower() == "asc")
                 {
                     products = products.OrderBy(p => p.Title).ToList();
@@ -113,13 +115,18 @@ namespace Motorcycle_WebShop.Controllers
                     products = products.OrderByDescending(p => p.Title).ToList();
                 }
             }
+            
+            if(per_page == 0)
+            {
+                per_page = products.Count;
+                products = products.Take(per_page).ToList();
+            }
 
-            //if (search.Page_number < 1) search.Page_number = 1;
-            //if (search.Per_page > 0 && search.Page_number > 0)
-            //{
-            //    products = products.Skip((search.Page_number - 1) * search.Per_page).Take(search.Per_page).ToList();
-            //}
-
+            if (per_page != null || per_page != 0)
+            {
+                products = products.Take(per_page).ToList();
+                //For petlja mozda tu, ne znam....
+            }
 
 
             ViewBag.Categories = _context.Category.ToList();
