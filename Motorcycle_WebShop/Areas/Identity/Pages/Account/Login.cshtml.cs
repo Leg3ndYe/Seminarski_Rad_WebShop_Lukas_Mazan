@@ -119,11 +119,11 @@ namespace Motorcycle_WebShop.Areas.Identity.Pages.Account
                 // This doesn't count login failures towards account lockout
                 // To enable password failures to trigger account lockout, set lockoutOnFailure: true
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-               
                 if (result.Succeeded)
                 {
                     var user = _context.Users.FirstOrDefault(x => x.Email == Input.Email);
                     user.LastLoginAt = DateTime.Now;
+                    user.IsActive = true;
                     user.LastKnownIpAddress = Response.HttpContext.Connection.RemoteIpAddress.ToString();
 
                     _context.Users.Update(user);

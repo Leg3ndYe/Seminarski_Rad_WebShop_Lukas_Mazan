@@ -11,6 +11,7 @@ using Motorcycle_WebShop.Models;
 using Motorcycle_WebShop.Controllers;
 using Microsoft.AspNetCore.Http.Extensions;
 using Motorcycle_WebShop.Data.Migrations;
+using System.Security.Claims;
 
 namespace Motorcycle_WebShop.Controllers
 {
@@ -19,6 +20,7 @@ namespace Motorcycle_WebShop.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IConfiguration _configuration;
         
         public AdminUserManagementController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration configuration)
@@ -30,9 +32,9 @@ namespace Motorcycle_WebShop.Controllers
 
         // GET: AdminUserManagement
         public async Task<IActionResult> Index()
-        {
-            List<ApplicationUser> appUsers = _context.Users.Where(x => x.IsActive == true).ToList();
-            
+        {      
+            List<ApplicationUser> appUsers = _context.Users.ToList();
+
             ViewBag.UserRoles = _context.UserRoles.ToList();
             ViewBag.Roles = _context.Roles.ToList();
 
@@ -47,10 +49,9 @@ namespace Motorcycle_WebShop.Controllers
                 return NotFound();
             }
 
-
-
             var users = await _context.Users
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (users == null)
             {
                 return NotFound();

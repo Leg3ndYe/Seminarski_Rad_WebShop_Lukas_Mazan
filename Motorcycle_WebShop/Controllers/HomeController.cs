@@ -33,13 +33,13 @@ namespace Motorcycle_WebShop.Controllers
             List<Product> uniqueRandomProductsList = new List<Product>();
             HashSet<Product> uniqueRandomProducts = new HashSet<Product>();
             Random rand = new Random();
-            if(products.Count >= 12)
+            if(products.Count >= 10)
             {
                 do
                 {
                     var randomProductIndex = rand.Next(products.Count);
                     uniqueRandomProducts.Add(products[randomProductIndex]);
-                } while (uniqueRandomProducts.Count < 12);
+                } while (uniqueRandomProducts.Count < 9);
                 uniqueRandomProductsList = uniqueRandomProducts.ToList();
             }
             else
@@ -75,8 +75,10 @@ namespace Motorcycle_WebShop.Controllers
             return View();
         }
 
-        public IActionResult Product(int? id, string? categoryTitle, string? sentence, int per_page)
+        //[Route("Home/Product/{per_page?}/{sentence?}", Name = "ProudctDefaultRoute")]
+        public IActionResult Product(int? id, string? categoryTitle, string? search_product, int per_page)
         {
+            
             List<Product> products = _context.Product.Where(x => x.IsActive == true).ToList();
 
             if (id != null)
@@ -100,17 +102,17 @@ namespace Motorcycle_WebShop.Controllers
                 products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == category.Id)).ToList();
             }
 
-            if (!String.IsNullOrEmpty(sentence))
+            if (!String.IsNullOrEmpty(search_product))
             {
-                if (sentence.ToLower() != "asc" && sentence.ToLower() != "desc")
+                if (search_product.ToLower() != "asc" && search_product.ToLower() != "desc")
                 {
-                    products = products.Where(p => p.Title.Contains(sentence, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                    products = products.Where(p => p.Title.Contains(search_product, StringComparison.CurrentCultureIgnoreCase)).ToList();
                 }
-                if (sentence.ToLower() == "asc")
+                if (search_product.ToLower() == "asc")
                 {
                     products = products.OrderBy(p => p.Title).ToList();
                 }
-                if (sentence.ToLower() == "desc")
+                if (search_product.ToLower() == "desc")
                 {
                     products = products.OrderByDescending(p => p.Title).ToList();
                 }
@@ -125,12 +127,16 @@ namespace Motorcycle_WebShop.Controllers
             if (per_page != null || per_page != 0)
             {
                 products = products.Take(per_page).ToList();
-                //For petlja mozda tu, ne znam....
             }
-
 
             ViewBag.Categories = _context.Category.ToList();
             return View(products);
+        }
+
+        [HttpPost]
+        public IActionResult ProductUpdate(string? categoryTitle, string? search_product, int per_page)
+        {
+            return RedirectToAction("Product", new { categoryTitle, search_product, per_page });
         }
 
         [Authorize]

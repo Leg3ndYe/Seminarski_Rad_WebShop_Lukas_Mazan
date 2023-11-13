@@ -8,16 +8,16 @@
 
 <div class="row">
     
-    <form class="row" asp-action="Product" asp-controller="Home">
+    <form class="row" asp-action="ProductUpdate" asp-controller="Home">
         <div class="col-sm-1"> 
-            <p>Show x</p>
+            <p>Showing @Model.Count</p>
             <input type="number" name="per_page" class="form-control" value="@Model.Count">
         </div>
 
         <div class="col-sm-8">
             <p>Search for product by name</p>
             <div class="input-group">
-                <input name="sentence" type="text" placeholder="Search" class="form-control" />
+                <input name="search_product" type="text" placeholder="Search" class="form-control" />
                 <button type="submit" class="btn btn-primary">Search</button>
             </div> 
         </div>
@@ -44,7 +44,7 @@
 </div>
 <div class="row mt-3"> 
     @foreach (var item in Model) {
-         <div class="col-sm-3"> <br>
+         <div class="col-sm-4"> <br>
               <div class="card">
                    <div class="card-body">
                         <a asp-action="Product" asp-route-id="@item.Id" style="color:inherit; text-decoration:none">
@@ -106,5 +106,7 @@
             selectedItemField.value = selectedValue;
         });
     });
+
 </script>
+
 

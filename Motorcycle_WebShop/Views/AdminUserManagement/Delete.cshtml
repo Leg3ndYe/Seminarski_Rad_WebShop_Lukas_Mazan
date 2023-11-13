@@ -1,4 +1,8 @@
 ﻿@model Motorcycle_WebShop.Data.ApplicationUser
+@using Microsoft.AspNetCore.Identity
+@using Motorcycle_WebShop.Data
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
 
 @{
     ViewData["Title"] = "Delete";
