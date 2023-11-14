@@ -6,19 +6,53 @@
     ViewData["Title"] = "Index";
 }
 
-<h2>List of Users</h2>
-
-<p>
+<h2>List of Registered Users</h2>
+<div>
     <a asp-action="Create" style="color:grey; float:right; text-decoration:none">+Create New User</a>
-</p>
+</div>
+<br />
+<div class="row">
+    <form class="row" asp-action="Index" asp-controller="AdminUserManagement">
+        <div class="col-sm-2">
+            <label>Filter by Role</label>
+            <div class="dropdown">
+                <button class="btn btn-outline-secondary dropdown-toggle" style="width:190px" type="button" role="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach(var role in ViewBag.Roles)
+                    {
+                        <a class="dropdown-item form-control" href="#">@role.Name</a>
+                    }
+                </div>
+            </div>
+            <input type="hidden" id="selectedItem" name="roleName" class="form-control"/>
+        </div>
+        <div class="col-sm-8">
+            <label>Search by E-mail</label>
+            <div class="input-group">
+                <input type="search" name="search" placeholder="Search" class="form-control"/>
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <label>Reset Filter</label>
+            <div>
+                <a asp-action="Index" style="width:215px" class="btn btn-secondary">Reset Filter</a>
+            </div>
+        </div>
+    </form>
+
+</div>
 <table class="table">
     <thead>
         <tr>
             <th class="col-sm-2">
                 Role
             </th>
-            <th class="col-sm-2">
+            <th class="col-sm-1">
                 Name
+            </th>
+            <th class="col-sm-1">
+                Status
             </th>
             <th class="col-sm-2">
                 E-mail -------------------->
@@ -30,84 +64,195 @@
                 2FA
             </th>
             <th></th>
-            <th></th>
             <th class="col-sm-4">
                 Actions
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
 @foreach (var item in Model) {
+        if(item.IsActive)
+        {
             <tr>
                 <td>
                     @{
                         var roleUser = (ViewBag.UserRoles as List<IdentityUserRole<string>>).FirstOrDefault(user => user.UserId == item.Id);
                         if (roleUser == null)
                         {
-                            <p>User</p>
+                                    <p>User</p>
                         }
                         else
                         {
                             var roleName = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
-                            <p>@roleName.Name</p>
+                                    <p>@roleName.Name</p>
                         } 
                     }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @if (!item.EmailConfirmed)
-                {
-                    <div class="text-center rounded-2 w-75" style="background-color:red">
-                        <label style="color:white" class="fw-bold">No</label>
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
-                        <label style="color:white" class="fw-bold">Yes</label>
-                    </div>
-                }
-            </td>
-            <td>
-                @if(!item.TwoFactorEnabled)
-                {
-                    <div class="text-center rounded-2 w-50" style="background-color:red">
-                        <label style="color:white" class="fw-bold">No</label>
-                    </div>
-                }
-                else
-                {
-                    <div class="text-center rounded-2 w-50" style="background-color:lightgreen">
-                        <label style="color:white" class="fw-bold">Yes</label>
-                    </div>
-                }
-            </td>
-            <td></td>
-            <td></td>
-            <td>
-                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">View</a> 
-                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
-                @{
-                    var roleNamee = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
-                    if ((roleNamee.Name == "Chief executive officer" || roleNamee.Name == "Admin") && !(User.IsInRole("Chief executive officer") || User.IsInRole("Admin")))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (!item.IsActive)
                     {
-                        <label class="btn btn-warning w-20">No Permission</label>
+                            <div class="text-center rounded-2 w-75" style="background-color:grey">
+                            <label style="color:white" class="fw-bold">Offline</label>
+                        </div>
                     }
                     else
                     {
-                        <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width:128px">Delete</a>
+                        <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Online</label>
+                        </div>
                     }
-                }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (!item.EmailConfirmed)
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:red">
+                            <label style="color:white" class="fw-bold">No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Yes</label>
+                        </div>
+                    }
+                </td>
+                <td>
+                    @if(!item.TwoFactorEnabled)
+                    {
+                        <div class="text-center rounded-2 w-50" style="background-color:red">
+                            <label style="color:white" class="fw-bold">No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center rounded-2 w-50" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Yes</label>
+                        </div>
+                    }
+                </td>
+                <td></td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">View</a> 
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a> 
+                    @{
+                        var roleNamee = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
+                        if ((roleNamee.Name == "Chief executive officer" || roleNamee.Name == "Admin") && !(User.IsInRole("Chief executive officer") || User.IsInRole("Admin")))
+                        {
+                                    <label class="btn btn-warning w-20">No Permission</label>
+                        }
+                        else
+                        {
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width:128px">Delete</a>
+                        }
+                    }
                      
-            </td>
-            <td></td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
+        else
+        {
+            <tr style="color:grey">
+                <td>
+                    @{
+                        var roleUser = (ViewBag.UserRoles as List<IdentityUserRole<string>>).FirstOrDefault(user => user.UserId == item.Id);
+                        if (roleUser == null)
+                        {
+                                    <p>User</p>
+                        }
+                        else
+                        {
+                            var roleName = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
+                                    <p>@roleName.Name</p>
+                        }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @if (!item.IsActive)
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:grey">
+                            <label style="color:white" class="fw-bold">Offline</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Online</label>
+                        </div>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @if (!item.EmailConfirmed)
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:red">
+                            <label style="color:white" class="fw-bold">No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center rounded-2 w-75" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Yes</label>
+                        </div>
+                    }
+                </td>
+                <td>
+                    @if (!item.TwoFactorEnabled)
+                    {
+                        <div class="text-center rounded-2 w-50" style="background-color:red">
+                            <label style="color:white" class="fw-bold">No</label>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center rounded-2 w-50" style="background-color:lightgreen">
+                            <label style="color:white" class="fw-bold">Yes</label>
+                        </div>
+                    }
+                </td>
+                <td></td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary">Edit</a>
+                    @{
+                        var roleNamee = (ViewBag.Roles as List<IdentityRole>).FirstOrDefault(role => role.Id == roleUser.RoleId);
+                        if ((roleNamee.Name == "Chief executive officer" || roleNamee.Name == "Admin") && !(User.IsInRole("Chief executive officer") || User.IsInRole("Admin")))
+                        {
+                                    <label class="btn btn-warning w-20">No Permission</label>
+                        }
+                        else
+                        {
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger" style="width:128px">Delete</a>
+                        }
+                    }
+
+                </td>
+            </tr>
+        }
+    }
     </tbody>
 </table>
+<script>
+    const dropdownButton = document.getElementById("dropdownMenuButton");
+    const selectedItemField = document.getElementById("selectedItem");
+    const dropdownItems = document.querySelectorAll(".dropdown-item");
+
+    dropdownItems.forEach(item => {
+        item.addEventListener("click", function () {
+            const selectedValue = this.textContent;
+            dropdownButton.textContent = selectedValue;
+            selectedItemField.value = selectedValue;
+        })
+    })
+
+</script>

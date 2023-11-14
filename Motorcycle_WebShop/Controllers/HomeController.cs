@@ -97,7 +97,6 @@ namespace Motorcycle_WebShop.Controllers
 
             if (categoryTitle != null)
             {
-                
                 var category = _context.Category.FirstOrDefault(c => c.Title == categoryTitle);
                 products = products.Where(p => p.ProductCategories.Any(p => p.CategoryId == category.Id)).ToList();
             }

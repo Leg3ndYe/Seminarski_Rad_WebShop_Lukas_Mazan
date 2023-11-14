@@ -12,6 +12,7 @@ using Motorcycle_WebShop.Controllers;
 using Microsoft.AspNetCore.Http.Extensions;
 using Motorcycle_WebShop.Data.Migrations;
 using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Motorcycle_WebShop.Controllers
 {
@@ -31,9 +32,31 @@ namespace Motorcycle_WebShop.Controllers
         }
 
         // GET: AdminUserManagement
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, string? roleName)
         {      
             List<ApplicationUser> appUsers = _context.Users.ToList();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                if (search.ToLower() != "asc" && search.ToLower() != "desc")
+                {
+                    appUsers = appUsers.Where(p => p.UserName.Contains(search, StringComparison.CurrentCultureIgnoreCase)).ToList();
+                }
+                if (search.ToLower() == "asc")
+                {
+                    appUsers = appUsers.OrderBy(p => p.UserName).ToList();
+                }
+                if (search.ToLower() == "desc")
+                {
+                    appUsers = appUsers.OrderByDescending(p => p.UserName).ToList();
+                }
+            }
+
+            if (roleName != null)
+            {
+                var role = _context.Roles.FirstOrDefault(c => c.Name == roleName);
+                appUsers = appUsers.Where(p => p.Role == role.Name).ToList();
+            }
 
             ViewBag.UserRoles = _context.UserRoles.ToList();
             ViewBag.Roles = _context.Roles.ToList();
