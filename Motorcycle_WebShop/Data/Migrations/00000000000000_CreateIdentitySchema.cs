@@ -40,7 +40,8 @@ namespace Motorcycle_WebShop.Data.Migrations
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
-                    AccessFailedCount = table.Column<int>(nullable: false)
+                    AccessFailedCount = table.Column<int>(nullable: false),
+                    Role = table.Column<string>(maxLength: 128, nullable: true)
                 },
                 constraints: table =>
                 {

@@ -33,7 +33,7 @@ namespace Motorcycle_WebShop.Data.Migrations
                                                     "TwoFactorEnabled, " +
                                                     "LockoutEnabled, " +
                                                     "AccessFailedCount, " +
-                                                    "Address, " +
+                                                    "Adress, " +
                                                     "City, " +
                                                     "Country, " +
                                                     "FirstName, " +

@@ -57,14 +57,15 @@ namespace Motorcycle_WebShop.Data.Migrations
                 maxLength: 10,
                 nullable: false,
                 defaultValue: "");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-    name: "Adress",
-    table: "AspNetUsers");
+                name: "Adress",
+                table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
                 name: "City",

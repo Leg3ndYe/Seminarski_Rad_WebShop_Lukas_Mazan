@@ -10,11 +10,6 @@ namespace Motorcycle_WebShop.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.RenameColumn(
-                name: "FilePath",
-                table: "UserAvatar",
-                newName: "AvatarFilePath");
-
             migrationBuilder.AddColumn<string>(
                 name: "AvatarFilePath",
                 table: "AspNetUsers",
@@ -29,10 +24,6 @@ namespace Motorcycle_WebShop.Data.Migrations
                 name: "AvatarFilePath",
                 table: "AspNetUsers");
 
-            migrationBuilder.RenameColumn(
-                name: "AvatarFilePath",
-                table: "UserAvatar",
-                newName: "FilePath");
         }
     }
 }
